@@ -1,15 +1,55 @@
 package com.nnk.springboot.domain;
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import java.sql.Timestamp;
 
-
+/**
+ * Represents a CurvePoint in the Poseiden application.
+ */
+@Data
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint {
-    // TODO: Map columns in data table CURVEPOINT with corresponding java fields
+
+    /**
+     * The unique identifier for the curvepoint.
+     */
+    @Id
+    @NotNull
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(name="Id")
+    private Integer curvePointId;
+
+    /**
+     * The identifier of the curve of the curvepoint.
+     */
+    @Column(name="CurveId")
+    private Integer curveId;
+
+    /**
+     * The as of date of the curvepoint.
+     */
+    @Column(name="asOfDate")
+    private Timestamp asOfDate;
+
+    /**
+     * The term of the curvepoint.
+     */
+    @Column(name="term")
+    private Double term;
+
+    /**
+     * The value of the curvepoint.
+     */
+    @Column(name="value")
+    private Double value;
+
+    /**
+     * The date of creation of the curvepoint.
+     */
+    @Column(name="creationDate")
+    private Timestamp creationDate;
+
 }

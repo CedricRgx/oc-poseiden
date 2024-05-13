@@ -1,60 +1,53 @@
 package com.nnk.springboot.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+/**
+ * Represents a User in the Poseiden application.
+ */
+@Data
 @Entity
 @Table(name = "users")
 public class User {
+
+    /**
+     * The unique identifier for the user.
+     */
     @Id
+    @NotNull
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    @Column(name="Id")
+    private Integer userId;
+
+    /**
+     * The username of the user.
+     */
     @NotBlank(message = "Username is mandatory")
+    @Column(name="username", length=125)
     private String username;
+
+    /**
+     * The password of the user.
+     */
     @NotBlank(message = "Password is mandatory")
+    @Column(name="password", length=125)
     private String password;
+
+    /**
+     * The fullname of the user.
+     */
     @NotBlank(message = "FullName is mandatory")
+    @Column(name="fullname", length=125)
     private String fullname;
+
+    /**
+     * The role of the user.
+     */
     @NotBlank(message = "Role is mandatory")
+    @Column(name="role", length=125)
     private String role;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
