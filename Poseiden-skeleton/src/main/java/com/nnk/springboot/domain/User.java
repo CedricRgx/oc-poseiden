@@ -1,8 +1,8 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -12,6 +12,17 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User() {
+    }
+
+    public User(Integer userId, String username, String password, String fullname, String role) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.role = role;
+    }
 
     /**
      * The unique identifier for the user.
