@@ -27,11 +27,6 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     public void testGetUsers() {
         // Arrange
