@@ -14,11 +14,31 @@ import java.sql.Timestamp;
 public class CurvePoint {
 
     /**
+     * Default constructor for the CurvePoint class
+     */
+    public CurvePoint() {
+    }
+
+    /**
+     * Construct a CurvePoint with its attributes
+     *
+     * @param asOfDate the reference date
+     * @param term  the period of time
+     * @param value the value at a given point in time
+     * @param creationDate the date at which the value was recorded
+     */
+    public CurvePoint(Timestamp asOfDate, Double term, Double value, Timestamp creationDate) {
+        this.asOfDate = asOfDate;
+        this.term = term;
+        this.value = value;
+        this.creationDate = creationDate;
+    }
+
+    /**
      * The unique identifier for the curvepoint.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Id")
     private Integer curvePointId;
 

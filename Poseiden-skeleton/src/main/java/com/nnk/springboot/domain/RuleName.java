@@ -13,11 +13,35 @@ import lombok.Data;
 public class RuleName {
 
     /**
+     * Default constructor for the RuleName class
+     */
+    public RuleName() {
+    }
+
+    /**
+     * Construct a RuleName with its attributes
+     *
+     * @param name        the name of the rule
+     * @param description a description of the rule
+     * @param json        JSON related to the rule
+     * @param template    the template used by the rule
+     * @param sqlStr      an SQL string pertaining to the rule
+     * @param sqlPart     part of an SQL statement related to the rule
+     */
+    public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart) {
+        this.name = name;
+        this.description = description;
+        this.json = json;
+        this.template = template;
+        this.sqlStr = sqlStr;
+        this.sqlPart = sqlPart;
+    }
+
+    /**
      * The unique identifier for the rulename.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Id")
     private Integer rulenameId;
 

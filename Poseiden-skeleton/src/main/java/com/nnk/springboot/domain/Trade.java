@@ -14,11 +14,63 @@ import java.sql.Timestamp;
 public class Trade {
 
     /**
+     * Default constructor for the Trade class
+     */
+    public Trade() {
+    }
+
+    /**
+     * Construct a Trade with its attributes
+     *
+     * @param account       the account name
+     * @param type          the type of trade
+     * @param buyQuantity   the quantity of buy
+     * @param sellQuantity  the quantity of sell
+     * @param buyPrice      the price of buy
+     * @param sellPrice     the price of sell
+     * @param tradeDate     the date of trade
+     * @param security      the security for trade
+     * @param status        the status of trade
+     * @param trader        the name of trader
+     * @param benchmark     the benchmark for trade
+     * @param book          the book of trade
+     * @param creationName  the name of creator
+     * @param creationDate  the date of creation
+     * @param revisionName  the name of revision
+     * @param revisionDate  the date of revision
+     * @param dealName      the name of deal
+     * @param dealType      the type of deal
+     * @param sourceListId  the id of source list
+     * @param side          the side of trade
+     */
+    public Trade(String account, String type, Double buyQuantity, Double sellQuantity, Double buyPrice, Double sellPrice, Timestamp tradeDate, String security, String status, String trader, String benchmark, String book, String creationName, Timestamp creationDate, String revisionName, Timestamp revisionDate, String dealName, String dealType, String sourceListId, String side) {
+        this.account = account;
+        this.type = type;
+        this.buyQuantity = buyQuantity;
+        this.sellQuantity = sellQuantity;
+        this.buyPrice = buyPrice;
+        this.sellPrice = sellPrice;
+        this.tradeDate = tradeDate;
+        this.security = security;
+        this.status = status;
+        this.trader = trader;
+        this.benchmark = benchmark;
+        this.book = book;
+        this.creationName = creationName;
+        this.creationDate = creationDate;
+        this.revisionName = revisionName;
+        this.revisionDate = revisionDate;
+        this.dealName = dealName;
+        this.dealType = dealType;
+        this.sourceListId = sourceListId;
+        this.side = side;
+    }
+
+    /**
      * The unique identifier for the trade.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="TradeId")
     private Integer tradeId;
 

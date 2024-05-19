@@ -14,11 +14,31 @@ import java.sql.Timestamp;
 public class Rating {
 
     /**
+     * Default constructor for the Rating class.
+     */
+    public Rating() {
+    }
+
+    /**
+     * Construct a Rating with its attributes
+     *
+     * @param moodysRating  the Moody's rating to set
+     * @param sandPRating   the Standard & Poor's rating to set
+     * @param fitchRating   the Fitch rating to set
+     * @param orderNumber   the order number to set
+     */
+    public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
+        this.moodysRating = moodysRating;
+        this.sandPRating = sandPRating;
+        this.fitchRating = fitchRating;
+        this.orderNumber = orderNumber;
+    }
+
+    /**
      * The unique identifier for the rating.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Id")
     private Integer ratingId;
 

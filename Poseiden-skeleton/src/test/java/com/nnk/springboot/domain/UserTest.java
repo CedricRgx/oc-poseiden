@@ -6,12 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class UserTest {
 
     private User user;
-    private Integer userId = 1;
     private String username = "username";
     private String password = "password";
     private String fullname = "fullname";
@@ -19,18 +19,13 @@ public class UserTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User(userId, username, password, fullname, role);
+        user = new User(username, password, fullname, role);
     }
 
     @Test
-    public void testGetId() {
-        assertEquals(userId, user.getUserId());
-    }
-
-    @Test
-    public void testSetId() {
-        user.setUserId(userId);
-        assertEquals(userId, user.getUserId());
+    public void testUserConstructor() {
+        user = new User();
+        assertNotNull(user);
     }
 
     @Test
@@ -61,7 +56,7 @@ public class UserTest {
     }
 
     @Test
-    public void setFullnameTest() {
+    public void testSetFullname() {
         user.setFullname(fullname);
         assertEquals(fullname, user.getFullname());
     }
@@ -72,7 +67,7 @@ public class UserTest {
     }
 
     @Test
-    public void setRoleTest() {
+    public void testSetRole() {
         user.setRole(role);
         assertEquals(role, user.getRole());
     }

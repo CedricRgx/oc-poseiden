@@ -13,11 +13,23 @@ import lombok.Data;
 @Table(name = "users")
 public class User {
 
+    /**
+     * Default constructor for User.
+     *
+     * Initialized a new User object with no properties set.
+     */
     public User() {
     }
 
-    public User(Integer userId, String username, String password, String fullname, String role) {
-        this.userId = userId;
+    /**
+     * Construct a User with its attributes
+     *
+     * @param username User's username.
+     * @param password User's password.
+     * @param fullname User's full name.
+     * @param role     User's role.
+     */
+    public User(String username, String password, String fullname, String role) {
         this.username = username;
         this.password = password;
         this.fullname = fullname;
@@ -28,8 +40,7 @@ public class User {
      * The unique identifier for the user.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Id")
     private Integer userId;
 

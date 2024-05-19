@@ -29,8 +29,8 @@ public class UserControllerTest {
     @Test
     public void testGetAllUsers_UserExists_ShouldReturnFound() {
         // Arrange
-        User userOne = new User(1, "John Doe", "JohnDoe", "password", "USER");
-        User userTwo = new User(2, "Jane Doe", "JaneDoe", "password", "USER");
+        User userOne = new User("John Doe", "JohnDoe", "password", "USER");
+        User userTwo = new User("Jane Doe", "JaneDoe", "password", "USER");
         List<User> users = Arrays.asList(userOne, userTwo);
         when(userService.getUsers()).thenReturn(users);
 
@@ -58,7 +58,7 @@ public class UserControllerTest {
     @Test
     public void testGetUserById_UserExists_ShouldReturnFound() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.getUserById(1)).thenReturn(Optional.of(user));
 
         // Act
@@ -86,7 +86,7 @@ public class UserControllerTest {
     @Test
     public void testAddNewUser_userAddedSuccessfully_shouldReturnStatusCreated() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.addUser(user)).thenReturn(user);
 
         // Act
@@ -100,7 +100,7 @@ public class UserControllerTest {
     @Test
     public void testAddNewUser_userAddedFailure_shouldReturnStatusBadRequest() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.addUser(user)).thenReturn(null);
 
         // Act
@@ -114,7 +114,7 @@ public class UserControllerTest {
     @Test
     public void testUpdateUser_userUpdatedSuccessfully_shouldReturnStatusOk() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.updateUser(user)).thenReturn(user);
 
         // Act
@@ -129,7 +129,7 @@ public class UserControllerTest {
     @Test
     public void testUpdateUser_userUpdateFailure_shouldReturnStatusNotFound() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.updateUser(user)).thenReturn(null);
 
         // Act
@@ -144,7 +144,7 @@ public class UserControllerTest {
     @Test
     public void testDeleteUser_userExists_shouldReturnStatusNoContent() {
         // Arrange
-        User user = new User(1, "John Doe", "JohnDoe", "password", "USER");
+        User user = new User("John Doe", "JohnDoe", "password", "USER");
         when(userService.getUserById(1)).thenReturn(Optional.of(user));
 
         // Act

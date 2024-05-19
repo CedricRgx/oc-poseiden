@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -14,11 +15,65 @@ import java.sql.Timestamp;
 public class BidList {
 
     /**
+     * Default constructor to create an instance of BidList.
+     */
+    public BidList() {
+    }
+
+    /**
+     * Constructor to create an instance of BidList with provided details.
+     *
+     * @param account        the account identifier.
+     * @param type           the type of bid.
+     * @param bidQuantity    the quantity of bid.
+     * @param askQuantity    the quantity of ask.
+     * @param bid            the bid amount.
+     * @param ask            the ask amount.
+     * @param benchmark      the benchmark.
+     * @param bidListDate    the date of bid list.
+     * @param commentary     the commentary.
+     * @param security       the security identifier.
+     * @param status         the status of bid.
+     * @param trader         the trader identifier.
+     * @param book           the book.
+     * @param creationName   the creation name.
+     * @param creationDate   the creation date.
+     * @param revisionName   the revision name.
+     * @param revisionDate   the revision date.
+     * @param dealName       the deal name.
+     * @param dealType       the deal type.
+     * @param sourceListId   the source list identifier.
+     * @param side           the side of bid/ask.
+     */
+    public BidList(String account, String type, Double bidQuantity, Double askQuantity, Double bid, Double ask, String benchmark, Timestamp bidListDate, String commentary, String security, String status, String trader, String book, String creationName, Timestamp creationDate, String revisionName, Timestamp revisionDate, String dealName, String dealType, String sourceListId, String side) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+        this.askQuantity = askQuantity;
+        this.bid = bid;
+        this.ask = ask;
+        this.benchmark = benchmark;
+        this.bidListDate = bidListDate;
+        this.commentary = commentary;
+        this.security = security;
+        this.status = status;
+        this.trader = trader;
+        this.book = book;
+        this.creationName = creationName;
+        this.creationDate = creationDate;
+        this.revisionName = revisionName;
+        this.revisionDate = revisionDate;
+        this.dealName = dealName;
+        this.dealType = dealType;
+        this.sourceListId = sourceListId;
+        this.side = side;
+    }
+
+    /**
      * The unique identifier for the bidlist.
      */
     @Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="BidListId")
     private Integer bidListId;
 
@@ -149,6 +204,5 @@ public class BidList {
      */
     @Column(name="side", length=125)
     private String side;
-
 
 }
