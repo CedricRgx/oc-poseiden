@@ -43,7 +43,7 @@ public class RuleName {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Id")
-    private Integer rulenameId;
+    private Integer ruleNameId;
 
     /**
      * The name of the rulename.
