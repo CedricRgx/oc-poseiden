@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface CurvePointRepository extends JpaRepository<CurvePoint, Integer> {
-
-    List<CurvePoint> findAll();
-
-    Optional<CurvePoint> findById(Integer curvePointId);
-
-    CurvePoint save(CurvePoint curvePoint);
-
-    void deleteById(Integer curvePointId);
-
 }

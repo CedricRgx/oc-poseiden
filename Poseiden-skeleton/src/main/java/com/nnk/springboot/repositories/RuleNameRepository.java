@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface RuleNameRepository extends JpaRepository<RuleName, Integer> {
-
-    List<RuleName> findAll();
-
-    Optional<RuleName> findById(Integer ruleNameId);
-
-    RuleName save(RuleName ruleName);
-
-    void deleteById(Integer ruleNameId);
-
 }

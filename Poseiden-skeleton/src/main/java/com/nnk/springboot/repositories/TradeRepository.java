@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
-
-    List<Trade> findAll();
-
-    Optional<Trade> findById(Integer tradeId);
-
-    Trade save(Trade trade);
-
-    void deleteById(Integer tradeId);
-
 }

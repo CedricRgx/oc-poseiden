@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Integer> {
-
-    List<Rating> findAll();
-
-    Optional<Rating> findById(Integer ratingId);
-
-    Rating save(Rating rating);
-
-    void deleteById(Integer ratingId);
-
 }

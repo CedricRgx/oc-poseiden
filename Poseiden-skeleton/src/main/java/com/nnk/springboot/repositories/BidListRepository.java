@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface BidListRepository extends JpaRepository<BidList, Integer> {
-
-    List<BidList> findAll();
-
-    Optional<BidList> findById(Integer bidListId);
-
-    BidList save(BidList bidList);
-
-    void deleteById(Integer bidListId);
-
 }

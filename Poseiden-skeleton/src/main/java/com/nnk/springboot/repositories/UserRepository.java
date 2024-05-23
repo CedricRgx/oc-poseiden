@@ -14,14 +14,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
-    List<User> findAll();
-
-    Optional<User> findById(Integer userId);
-
     Optional<User> findByUsername(String username);
-
-    User save(User user);
-
-    void deleteById(Integer userId);
 
 }
