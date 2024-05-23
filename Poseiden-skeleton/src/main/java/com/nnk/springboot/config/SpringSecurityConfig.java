@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 /**
  * Configuration class for Spring Security, enabling and customizing web security for the Poseiden application.
  */
@@ -33,11 +31,11 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/css/**", "/js/**").permitAll()
+                .requestMatchers("/css/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/bidList/list", true)
                 .permitAll()
                 .and()
                 .rememberMe()
@@ -45,7 +43,7 @@ public class SpringSecurityConfig {
                 .tokenValiditySeconds(86400) // 86400 seconds = 24 hours
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/app-logout")
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll();
         return http.build();
