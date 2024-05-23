@@ -1,7 +1,6 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -41,9 +40,9 @@ public class RuleName {
      * The unique identifier for the rulename.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="Id")
-    private Integer ruleNameId;
+    private Integer id;
 
     /**
      * The name of the rulename.

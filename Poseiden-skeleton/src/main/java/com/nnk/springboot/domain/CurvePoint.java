@@ -1,7 +1,6 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -38,9 +37,9 @@ public class CurvePoint {
      * The unique identifier for the curvepoint.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="Id")
-    private Integer curvePointId;
+    private Integer id;
 
     /**
      * The identifier of the curve of the curvepoint.

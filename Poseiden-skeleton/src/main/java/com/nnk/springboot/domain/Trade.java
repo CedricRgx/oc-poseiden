@@ -70,9 +70,9 @@ public class Trade {
      * The unique identifier for the trade.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="TradeId")
-    private Integer tradeId;
+    private Integer id;
 
     /**
      * The account of the trade.

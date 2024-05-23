@@ -2,7 +2,6 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -73,9 +72,9 @@ public class BidList {
      * The unique identifier for the bidlist.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="BidListId")
-    private Integer bidListId;
+    private Integer id;
 
     /**
      * The account of the bidlist.

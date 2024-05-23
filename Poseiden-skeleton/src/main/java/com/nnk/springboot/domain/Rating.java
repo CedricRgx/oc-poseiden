@@ -1,9 +1,7 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import java.sql.Timestamp;
 
 /**
  * Represents a Rating in the Poseiden application.
@@ -38,9 +36,9 @@ public class Rating {
      * The unique identifier for the rating.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="Id")
-    private Integer ratingId;
+    private Integer id;
 
     /**
      * The moodysRating of the rating.

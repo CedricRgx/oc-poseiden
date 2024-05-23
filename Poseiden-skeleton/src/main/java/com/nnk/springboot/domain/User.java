@@ -2,7 +2,6 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -40,9 +39,9 @@ public class User {
      * The unique identifier for the user.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="Id")
-    private Integer userId;
+    private Integer id;
 
     /**
      * The username of the user.
