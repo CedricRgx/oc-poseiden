@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/oc-poseiden.iml" filepath="$PROJECT_DIR$/.idea/oc-poseiden.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Poseiden-skeleton/spring-boot-skeleton.iml" filepath="$PROJECT_DIR$/Poseiden-skeleton/spring-boot-skeleton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Poseidon-skeleton/spring-boot-skeleton.iml" filepath="$PROJECT_DIR$/Poseidon-skeleton/spring-boot-skeleton.iml" />
     </modules>
   </component>
 </project>

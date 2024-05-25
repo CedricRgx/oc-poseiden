@@ -1,7 +1,7 @@
 package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.exceptions.poseidonEntityNotFoundException;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.service.IBidListService;
 import jakarta.persistence.EntityNotFoundException;
@@ -99,7 +99,7 @@ public class BidListService implements IBidListService {
      */
     private void verifyBidListExistence(int id){
         if(!bidListRepository.existsById(id)){
-            throw new poseidonEntityNotFoundException("BidList is not found ", id);
+            throw new PoseidonEntityNotFoundException("BidList is not found ", id);
         }
     }
 
