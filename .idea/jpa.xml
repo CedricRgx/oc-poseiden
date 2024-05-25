@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaBuddyIdeaProjectConfig">
+    <option name="reLastEntityCreationPackage" value="Poseidon-skeleton/src/main/java/com/nnk/springboot" />
+    <option name="reverseEngineeringLastDbConnectionId" value="69b0cfc8-b6c5-46be-9371-fc228c61d38b" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default">
+        <packages>
+          <package value="com.nnk.springboot" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>
