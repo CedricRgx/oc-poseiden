@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS bidList (
   bidListId bigint NOT NULL AUTO_INCREMENT,
   account VARCHAR(30) NOT NULL,
   type VARCHAR(30) NOT NULL,
-  bidQuantity DOUBLE,
+  bidQuantity DOUBLE DEFAULT 0,
   askQuantity DOUBLE,
   bid DOUBLE ,
   ask DOUBLE,
