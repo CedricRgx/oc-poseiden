@@ -1,16 +1,12 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.service.impl.CurvePointService;
 import com.nnk.springboot.service.impl.CurvePointService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +54,7 @@ public class CurvePointControllerTest {
     }
 
     @Test
-    public void testAddBidForm() {
+    public void testAddCurvePointForm() {
         // Arrange
         CurvePoint curvePoint = new CurvePoint();
 
@@ -98,7 +93,7 @@ public class CurvePointControllerTest {
     }
 
     @Test
-    public void testUpdateBid() {
+    public void testUpdateCurvePoint() {
         // Arrange
         int id = 1;
         CurvePoint curvePoint = new CurvePoint();
@@ -112,7 +107,7 @@ public class CurvePointControllerTest {
     }
 
     @Test
-    public void testDeleteBid() {
+    public void testDeleteCurvePoint() {
         // Arrange
         int id = 1;
 

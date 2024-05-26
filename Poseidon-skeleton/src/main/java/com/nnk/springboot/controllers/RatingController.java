@@ -5,8 +5,8 @@ import com.nnk.springboot.service.impl.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,150 +20,125 @@ import java.util.Optional;
 public class RatingController {
     
     private static final Logger logger = LoggerFactory.getLogger(RatingController.class);
+    
+    private final RatingService ratingService;
 
     @Autowired
-    private RatingService ratingService;
-
-    @RequestMapping("/rating/list")
-    public String home(Model model)
-    {
-        // TODO: find all Rating, add to model
+    public RatingController(RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
+    
+    /**
+     * Displays the list of ratings.
+     *
+     * @param model The model for the view to add attributes to be rendered on the page.
+     * @return The name of the template to render the list of ratings.
+     */
+    @GetMapping("/rating/list")
+    public String home(Model model){
+        logger.info("Loading rating list page");
+        List<Rating> ratings = ratingService.getRatings();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(ratings == null) {
+            logger.error("Error retrieving ratings for list page");
+        } else {
+            logger.info("Successfully retrieved ratings for list page");
+            model.addAttribute("ratings", ratings);
+            model.addAttribute("user", userDetails);
+        }
         return "rating/list";
     }
 
+    /**
+     * Displays the view to add a rating.
+     *
+     * @param rating The rating to add for the view to add attributes to be rendered on the page.
+     * @return The name of the template to render the list of ratings.
+     */
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating) {
+        logger.info("Loading add rating form");
         return "rating/add";
     }
 
+    /**
+     * Handles the POST request to validate and save a rating point.
+     *
+     * @param rating The rating point to be validated and saved.
+     * @param result The binding result which holds the validation results for the rating point.
+     * @param model The Model object to be used in the view.
+     * @return A String indicating the next view. If there are errors, it returns to the add view.
+     *         If the rating point is successfully saved, it redirects to the rating point view.
+     */
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
-        return "rating/add";
+    public String validate(@Valid @ModelAttribute("rating") Rating rating, BindingResult result, Model model) {
+        logger.info("Rating validation started");
+        if(result.hasErrors()) {
+            model.addAttribute("rating", rating);
+            logger.error("Rating validation has errors");
+            return "rating/add";
+        }
+        ratingService.addRating(rating);
+        logger.info("Rating validation finished successfully, Rating added");
+        return "redirect:/rating/list";
     }
 
+    /**
+     * Handles the GET request to display the form for updating a bid list.
+     *
+     * @param id The id of the rating point to be updated.
+     * @param model The Model object to be used in the view.
+     * @return A String that represents the view to be returned.
+     *         This is the update view for the rating point.
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Rating by Id and to model then show to the form
+        logger.info("Show update form for Rating with id: " + id);
+        Optional<Rating> bid = ratingService.getRatingById(id);
+        if(bid.isPresent()) {
+            model.addAttribute("rating", bid.get());
+        }else{
+            logger.warn("Rating with id: " + id + " not found");
+        }
         return "rating/update";
     }
 
+    /**
+     * Handles the POST request to update a rating point.
+     *
+     * @param id The id of the rating point to be updated.
+     * @param rating The updated rating point.
+     * @param result The binding result which holds the validation results for the rating point.
+     * @param model The Model object to be used in the view.
+     * @return A string indicating the next view. If there are errors, it returns to the update view.
+     *         If the bid list is successfully updated, it redirects to the list view.
+     */
     @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
+    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating, BindingResult result, Model model) {
+        logger.info("Updating Rating with id: " + id);
+        if(result.hasErrors()) {
+            model.addAttribute("rating", rating);
+            logger.error("Error updating Rating with id: " + id);
+            return "rating/update";
+        }
+        ratingService.updateRating(rating);
+        logger.info("Updated Rating with id: " + id);
         return "redirect:/rating/list";
     }
 
-    @GetMapping("/rating/delete/{id}")
+    /**
+     * Handles the POST request to delete a rating point by id.
+     *
+     * @param id    The id of the rating point to be deleted.
+     * @param model The Model object to be used in the view.
+     * @return A String that represents the list of rating to be returned.
+     */
+    @PostMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Rating by Id and delete the Rating, return to Rating list
+        logger.info("Deleting Rating with id: " + id);
+        ratingService.deleteRatingById(id);
+        logger.info("Deleted Rating with id: " + id);
         return "redirect:/rating/list";
     }
-
-
-   /* *//**
-     * This method responds to a GET request at the "/rating/list" URL.
-     *
-     * @return ResponseEntity<List<Rating>> If the rating list is not empty, it returns a response entity with the list of ratings and HTTP status code 200 (OK).
-     * If the rating list is empty, it returns a response entity with an empty list and HTTP status code 404 (NOT FOUND).
-     **//*
-    @GetMapping("/rating/list")
-    public ResponseEntity<List<Rating>> getAllRatings() {
-        logger.info("GET request on the endpoint /rating/list: getting the list of ratings");
-        List<Rating> ratingList = ratingService.getRatings();
-        HttpStatus status;
-        if (ratingList.isEmpty()) {
-            logger.error("No ratings found in the database");
-            status = HttpStatus.NOT_FOUND;
-        }else{
-            logger.info("Successfully getting the list of all ratings");
-            status = HttpStatus.OK;
-        }
-        return new ResponseEntity<>(ratingList, status);
-    }
-
-    *//**
-     * This method responds to a GET request at the "/rating/id" URL.
-     *
-     * @return ResponseEntity<Rating> If the rating is not empty, it returns a response entity with the rating and HTTP status code 200 (OK).
-     * If the rating is empty, it returns a response entity with a HTTP status code 404 (NOT FOUND).
-     **//*
-    @GetMapping("/rating/{id}")
-    public ResponseEntity<Rating> getRatingById(@PathVariable("id") Integer ratingId) {
-        logger.info("GET request on the endpoint /rating/id: getting the rating by its id");
-        Optional<Rating> rating = ratingService.getRatingById(ratingId);
-        if (rating.isEmpty()) {
-            logger.error("No rating found in the database");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-            logger.info("Successfully getting the rating by its ID");
-            return new ResponseEntity<>(rating.get(), HttpStatus.OK);
-        }
-    }
-
-    *//**
-     * This method responds to a POST request at the "/rating/add" URL.
-     *
-     * @return ResponseEntity<Rating> If the rating has been added, it returns a response entity with the rating and HTTP status CREATED.
-     * If the rating has not been added, it returns a response entity with a HTTP status code BAD_REQUEST.
-     **//*
-    @PostMapping("/rating/add")
-    public ResponseEntity<Rating> addNewRating(@RequestBody Rating rating) {
-        logger.info("POST request on the endpoint /rating/add: adding an rating");
-        Rating ratingAdded = ratingService.addRating(rating);
-        HttpStatus status;
-        if (ratingAdded == null) {
-            logger.error("Error adding rating");
-            status = HttpStatus.BAD_REQUEST;
-        }else{
-            logger.info("Success adding rating");
-            status = HttpStatus.CREATED;
-        }
-        return new ResponseEntity<>(ratingAdded, status);
-    }
-
-    *//**
-     * This method responds to a PUT request at the "/rating/update/{id}" URL.
-     *
-     * @return ResponseEntity<Rating> If the rating has been updated, it returns a response entity with the rating and HTTP status OK.
-     * If the rating has not been updated, it returns a response entity with a HTTP status code NOT_FOUND.
-     **//*
-    @PutMapping("/rating/update/{id}")
-    public ResponseEntity<Rating> updateRating(@PathVariable("id") Integer ratingId, @RequestBody Rating rating) {
-        logger.info("PUT request on the endpoint /rating/update/{id}: updating an rating");
-        rating.setRatingId(ratingId);
-        Rating ratingUpdated = ratingService.updateRating(rating);
-        HttpStatus status;
-        if (ratingUpdated == null) {
-            logger.error("Error updating rating");
-            status = HttpStatus.NOT_FOUND;
-        }else{
-            logger.info("Success updating rating");
-            status = HttpStatus.OK;
-        }
-        return new ResponseEntity<>(ratingUpdated, status);
-    }
-
-    *//**
-     * This method responds to a DELETE request at the "/rating/delete/{id}" URL.
-     *
-     * @return ResponseEntity<Void> If the rating has been deleted, it returns a response entity with HTTP status NO_CONTENT.
-     * If the rating is not found, it returns a response entity with HTTP status code NOT_FOUND.
-     **//*
-    @DeleteMapping("/rating/delete/{id}")
-    public ResponseEntity<Void> deleteRating(@PathVariable("id") Integer ratingId) {
-        logger.info("DELETE request on the endpoint /rating/delete/{id}: deleting an rating");
-        Optional<Rating> rating = ratingService.getRatingById(ratingId);
-        HttpStatus status;
-        if (rating.isEmpty()) {
-            logger.error("Error deleting user: rating not found");
-            status = HttpStatus.NOT_FOUND;
-        }else{
-            ratingService.deleteRatingById(ratingId);
-            logger.info("Success deleting rating");
-            status = HttpStatus.NO_CONTENT;
-        }
-        return new ResponseEntity<>(status);
-    }*/
+    
 }

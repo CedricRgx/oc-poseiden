@@ -140,4 +140,5 @@ public class CurvePointController {
         logger.info("Deleted Curve Point with id: " + id);
         return "redirect:/curvePoint/list";
     }
+
 }

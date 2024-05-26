@@ -2,7 +2,6 @@ package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
-import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.service.ICurvePointService;
 import jakarta.persistence.EntityNotFoundException;

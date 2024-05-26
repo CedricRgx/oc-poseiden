@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `poseidon`
+CREATE DATABASE IF NOT EXISTS `poseidon`;
 USE `poseidon`;
 
 CREATE TABLE IF NOT EXISTS bidList (
@@ -97,5 +97,5 @@ CREATE TABLE IF NOT EXISTS users (
   PRIMARY KEY (userId)
 );
 
-insert into Users(fullname, username, password, role) values('Administrator', 'admin", '$2a$12$a5KuvsOJZ64quL1aeuK1UOoF.Q/HqaHGxamnjPIgHxY9hXDm1g.LW', 'ADMIN);
+insert into Users(fullname, username, password, role) values('Administrator', 'admin', '$2a$12$a5KuvsOJZ64quL1aeuK1UOoF.Q/HqaHGxamnjPIgHxY9hXDm1g.LW', 'ADMIN');
 insert into Users(fullname, username, password, role) values('User', 'user', '$2a$12$CWWqw5GsIu9rkr8VeXTOmOBj/biwz4VcVHtr74cLv6SCoNytwnHgi', 'USER');
