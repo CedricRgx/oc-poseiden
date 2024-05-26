@@ -74,7 +74,7 @@ public class BidList {
      * The unique identifier for the bidlist.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name= "bidListId")
     private Integer id;
 

@@ -37,7 +37,7 @@ public class CurvePoint {
      * The unique identifier for the curvepoint.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="curvePointId")
     private Integer id;
 

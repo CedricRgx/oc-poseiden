@@ -40,7 +40,7 @@ public class RuleName {
      * The unique identifier for the rulename.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="ruleNameId")
     private Integer id;
 

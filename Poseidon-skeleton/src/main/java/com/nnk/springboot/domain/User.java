@@ -39,7 +39,7 @@ public class User {
      * The unique identifier for the user.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="userId")
     private Integer id;
 

@@ -36,7 +36,7 @@ public class Rating {
      * The unique identifier for the rating.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="ratingId")
     private Integer id;
 
