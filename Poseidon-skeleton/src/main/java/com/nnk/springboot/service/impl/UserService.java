@@ -2,8 +2,11 @@ package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.controllers.UserController;
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
+import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.service.IUserService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +48,7 @@ public class UserService implements IUserService {
      */
     public Optional<User> getUserById(int userId){
         logger.info("Retrieving an user by its id");
+        verifyUserExistence(userId);
         return userRepository.findById(userId);
     }
 
@@ -67,6 +71,7 @@ public class UserService implements IUserService {
     @Transactional
     public User updateUser(User user){
         logger.info("Updating an user");
+        verifyUserExistence(user.getId());
         return userRepository.save(user);
     }
 
@@ -77,7 +82,7 @@ public class UserService implements IUserService {
     @Transactional
     public void deleteUserById(int userId){
         logger.info("Deleting an user");
-        //TODO renvoyer une exception si l'user n'est pas trouvé (EntityNotFoundException à créer)
+        verifyUserExistence(userId);
         userRepository.deleteById(userId);
     }
 
@@ -88,8 +93,23 @@ public class UserService implements IUserService {
      */
     public Optional<User> findByUsername(String username){
         logger.info("Retrieving an user by its username");
-        //TODO renvoyer une exception si l'user n'est pas trouvé (EntityNotFoundException à créer)
-        return userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user == null){
+            throw new EntityNotFoundException("User not found");
+        }
+        return user;
+    }
+
+    /**
+     * This method checks if a User with a given ID exists in the repository.
+     *
+     * @param id An integer representing the ID of the User.
+     * @throws EntityNotFoundException if no User with the provided ID is found in the repository.
+     */
+    private void verifyUserExistence(int id){
+        if(!userRepository.existsById(id)){
+            throw new PoseidonEntityNotFoundException("User is not found ", id);
+        }
     }
 
 }

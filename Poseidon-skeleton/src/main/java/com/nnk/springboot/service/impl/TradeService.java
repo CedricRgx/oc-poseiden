@@ -1,8 +1,11 @@
 package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
+import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.service.ITradeService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +23,12 @@ public class TradeService implements ITradeService {
 
     private static final Logger logger = LoggerFactory.getLogger(TradeService.class);
 
+    private final TradeRepository tradeRepository;
+
     @Autowired
-    private TradeRepository tradeRepository;
+    public TradeService(TradeRepository tradeRepository) {
+        this.tradeRepository = tradeRepository;
+    }
 
     /**
      * Retrieves all tradeServices from the repository.
@@ -39,6 +46,7 @@ public class TradeService implements ITradeService {
      */
     public Optional<Trade> getTradeById(int tradeId){
         logger.info("Retrieving a trade by its id");
+        verifyTradeExistence(tradeId);
         return tradeRepository.findById(tradeId);
     }
 
@@ -61,6 +69,7 @@ public class TradeService implements ITradeService {
     @Transactional
     public Trade updateTrade(Trade trade){
         logger.info("Updating a Trade");
+        verifyTradeExistence(trade.getId());
         return tradeRepository.save(trade);
     }
 
@@ -71,7 +80,20 @@ public class TradeService implements ITradeService {
     @Transactional
     public void deleteTradeById(int tradeId){
         logger.info("Deleting a trade");
+        verifyTradeExistence(tradeId);
         tradeRepository.deleteById(tradeId);
+    }
+
+    /**
+     * This method checks if a Trade with a given ID exists in the repository.
+     *
+     * @param id An integer representing the ID of the Trade.
+     * @throws EntityNotFoundException if no Trade with the provided ID is found in the repository.
+     */
+    private void verifyTradeExistence(int id){
+        if(!tradeRepository.existsById(id)){
+            throw new PoseidonEntityNotFoundException("Trade is not found ", id);
+        }
     }
 
 }

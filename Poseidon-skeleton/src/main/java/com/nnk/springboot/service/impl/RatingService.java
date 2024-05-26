@@ -1,8 +1,11 @@
 package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
+import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.service.IRatingService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +23,12 @@ public class RatingService implements IRatingService {
 
     private static final Logger logger = LoggerFactory.getLogger(RatingService.class);
 
+    private final RatingRepository ratingRepository;
+
     @Autowired
-    private RatingRepository ratingRepository;
+    public RatingService(RatingRepository ratingRepository) {
+        this.ratingRepository = ratingRepository;
+    }
 
     /**
      * Retrieves all ratings from the repository.
@@ -39,6 +46,7 @@ public class RatingService implements IRatingService {
      */
     public Optional<Rating> getRatingById(int ratingId){
         logger.info("Retrieving a rating by its id");
+        verifyRatingExistence(ratingId);
         return ratingRepository.findById(ratingId);
     }
 
@@ -61,6 +69,7 @@ public class RatingService implements IRatingService {
     @Transactional
     public Rating updateRating(Rating rating){
         logger.info("Updating a rating");
+        verifyRatingExistence(rating.getId());
         return ratingRepository.save(rating);
     }
 
@@ -71,7 +80,20 @@ public class RatingService implements IRatingService {
     @Transactional
     public void deleteRatingById(int ratingId){
         logger.info("Deleting a rating");
+        verifyRatingExistence(ratingId);
         ratingRepository.deleteById(ratingId);
+    }
+
+    /**
+     * This method checks if a Rating with a given ID exists in the repository.
+     *
+     * @param id An integer representing the ID of the Rating.
+     * @throws EntityNotFoundException if no Rating with the provided ID is found in the repository.
+     */
+    private void verifyRatingExistence(int id){
+        if(!ratingRepository.existsById(id)){
+            throw new PoseidonEntityNotFoundException("Rating is not found ", id);
+        }
     }
 
 }

@@ -1,8 +1,11 @@
 package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
+import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.service.ICurvePointService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +23,12 @@ public class CurvePointService implements ICurvePointService {
 
     private static final Logger logger = LoggerFactory.getLogger(CurvePointService.class);
 
+    private final CurvePointRepository curvePointRepository;
+
     @Autowired
-    private CurvePointRepository curvePointRepository;
+    public CurvePointService(CurvePointRepository curvePointRepository) {
+        this.curvePointRepository = curvePointRepository;
+    }
 
     /**
      * Retrieves all curvePoints from the repository.
@@ -39,6 +46,7 @@ public class CurvePointService implements ICurvePointService {
      */
     public Optional<CurvePoint> getCurvePointById(int curvePointId){
         logger.info("Retrieving a curvePoint by its id");
+        verifyCurvePointExistence(curvePointId);
         return curvePointRepository.findById(curvePointId);
     }
 
@@ -61,6 +69,7 @@ public class CurvePointService implements ICurvePointService {
     @Transactional
     public CurvePoint updateCurvePoint(CurvePoint curvePoint){
         logger.info("Updating a curvePoint");
+        verifyCurvePointExistence(curvePoint.getId());
         return curvePointRepository.save(curvePoint);
     }
 
@@ -71,7 +80,20 @@ public class CurvePointService implements ICurvePointService {
     @Transactional
     public void deleteCurvePointById(int curvePointId){
         logger.info("Deleting a curvePoint");
+        verifyCurvePointExistence(curvePointId);
         curvePointRepository.deleteById(curvePointId);
+    }
+
+    /**
+     * This method checks if a CurvePoint with a given ID exists in the repository.
+     *
+     * @param id An integer representing the ID of the CurvePoint.
+     * @throws EntityNotFoundException if no CurvePoint with the provided ID is found in the repository.
+     */
+    private void verifyCurvePointExistence(int id){
+        if(!curvePointRepository.existsById(id)){
+            throw new PoseidonEntityNotFoundException("CurvePoint is not found ", id);
+        }
     }
 
 }

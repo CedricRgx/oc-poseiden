@@ -1,8 +1,11 @@
 package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
+import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.service.IRuleNameService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +23,12 @@ public class RuleNameService implements IRuleNameService {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleNameService.class);
 
+    private final RuleNameRepository ruleNameRepository;
+
     @Autowired
-    private RuleNameRepository ruleNameRepository;
+    public RuleNameService(RuleNameRepository ruleNameRepository) {
+        this.ruleNameRepository = ruleNameRepository;
+    }
 
     /**
      * Retrieves all ruleNames from the repository.
@@ -39,6 +46,7 @@ public class RuleNameService implements IRuleNameService {
      */
     public Optional<RuleName> getRuleNameById(int ruleNameId){
         logger.info("Retrieving a ruleName by its id");
+        verifyRuleNameExistence(ruleNameId);
         return ruleNameRepository.findById(ruleNameId);
     }
 
@@ -61,6 +69,7 @@ public class RuleNameService implements IRuleNameService {
     @Transactional
     public RuleName updateRuleName(RuleName ruleName){
         logger.info("Updating a ruleName");
+        verifyRuleNameExistence(ruleName.getId());
         return ruleNameRepository.save(ruleName);
     }
 
@@ -71,7 +80,20 @@ public class RuleNameService implements IRuleNameService {
     @Transactional
     public void deleteRuleNameById(int ruleNameId){
         logger.info("Deleting a ruleName");
+        verifyRuleNameExistence(ruleNameId);
         ruleNameRepository.deleteById(ruleNameId);
+    }
+
+    /**
+     * This method checks if a RuleName with a given ID exists in the repository.
+     *
+     * @param id An integer representing the ID of the RuleName.
+     * @throws EntityNotFoundException if no RuleName with the provided ID is found in the repository.
+     */
+    private void verifyRuleNameExistence(int id){
+        if(!ruleNameRepository.existsById(id)){
+            throw new PoseidonEntityNotFoundException("RuleName is not found ", id);
+        }
     }
 
 }
