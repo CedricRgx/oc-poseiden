@@ -6,3 +6,16 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+# Ignorer tous les fichiers .class
+*.class
+
+# Ignorer le répertoire target/ qui contient les fichiers compilés pour Maven
+target/
+
+# Ignorer d'autres fichiers générés par des outils de construction
+*.log
+*.tmp
+*.out
+*.swp
+/logs/app.log
