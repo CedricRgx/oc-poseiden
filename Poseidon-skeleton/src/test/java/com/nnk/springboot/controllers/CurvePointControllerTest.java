@@ -1,7 +1,8 @@
-/*
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.service.impl.CurvePointService;
 import com.nnk.springboot.service.impl.CurvePointService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,10 +11,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
@@ -21,153 +27,100 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CurvePointControllerTest {
 
-    @Mock
-    private CurvePointService curvePointService;
-
     @InjectMocks
     private CurvePointController curvePointController;
 
+    @Mock
+    CurvePointService curvePointService;
+
+    @Mock
+    Model model;
+
+    @Mock
+    BindingResult bindingResult;
+
     @Test
-    public void testGetAllCurvePoints_CurvePointExists_ShouldReturnFound() {
+    public void testHome() {
         // Arrange
-        CurvePoint curvePointOne = new CurvePoint();
-        CurvePoint curvePointTwo = new CurvePoint();
-        List<CurvePoint> curvePoints = Arrays.asList(curvePointOne, curvePointTwo);
-        when(curvePointService.getCurvePoints()).thenReturn(curvePoints);
+        when(curvePointService.getCurvePoints()).thenReturn(new ArrayList<>());
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
 
         // Act
-        ResponseEntity<List<CurvePoint>> response = curvePointController.getAllCurvePoints();
+        String viewName = curvePointController.home(model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(curvePoints, response.getBody());
+        assertEquals("curvePoint/list", viewName);
     }
 
     @Test
-    public void testGetAllCurvePoints_NoCurvePointExists_ShouldReturnNotFound() {
-        // Arrange
-        when(curvePointService.getCurvePoints()).thenReturn(Collections.emptyList());
-
-        // Act
-        ResponseEntity<List<CurvePoint>> response = curvePointController.getAllCurvePoints();
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
-    }
-
-    @Test
-    public void testGetCurvePointById_CurvePointExists_ShouldReturnFound() {
-        // Arrange
-        CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.getCurvePointById(1)).thenReturn(Optional.of(curvePoint));
-
-        // Act
-        ResponseEntity<CurvePoint> response = curvePointController.getCurvePointById(1);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(curvePoint, response.getBody());
-    }
-
-    @Test
-    public void getCurvePointById_CurvePointDoesNotExist_ShouldReturnNotFound() {
-        // Arrange
-        Integer curvePointId = 1;
-        when(curvePointService.getCurvePointById(1)).thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<CurvePoint> response;
-        response = curvePointController.getCurvePointById(curvePointId);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddNewCurvePoint_curvePointAddedSuccessfully_shouldReturnStatusCreated() {
+    public void testAddBidForm() {
         // Arrange
         CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.addCurvePoint(curvePoint)).thenReturn(curvePoint);
 
         // Act
-        ResponseEntity<CurvePoint> response = curvePointController.addNewCurvePoint(curvePoint);
+        String viewName = curvePointController.addCurveForm(curvePoint);
 
         // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(curvePoint, response.getBody());
+        assertEquals("curvePoint/add", viewName);
     }
 
     @Test
-    public void testAddNewCurvePoint_curvePointAddedFailure_shouldReturnStatusBadRequest() {
+    public void testValidate() {
         // Arrange
         CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.addCurvePoint(curvePoint)).thenReturn(null);
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<CurvePoint> response = curvePointController.addNewCurvePoint(curvePoint);
+        String viewName = curvePointController.validate(curvePoint, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
+        assertEquals("redirect:/curvePoint/list", viewName);
     }
 
     @Test
-    public void testUpdateCurvePoint_curvePointUpdatedSuccessfully_shouldReturnStatusOk() {
+    public void testShowUpdateForm() {
         // Arrange
+        int id = 1;
+        Optional<CurvePoint> curvePoint = Optional.of(new CurvePoint());
+        when(curvePointService.getCurvePointById(id)).thenReturn(curvePoint);
+
+        // Act
+        String viewName = curvePointController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("curvePoint/update", viewName);
+    }
+
+    @Test
+    public void testUpdateBid() {
+        // Arrange
+        int id = 1;
         CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.updateCurvePoint(curvePoint)).thenReturn(curvePoint);
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<CurvePoint> response = curvePointController.updateCurvePoint(curvePoint.getId(), curvePoint);
+        String viewName = curvePointController.updateCurve(id, curvePoint, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(curvePoint, response.getBody());
-        verify(curvePointService).updateCurvePoint(curvePoint);
+        assertEquals("redirect:/curvePoint/list", viewName);
     }
 
     @Test
-    public void testUpdateCurvePoint_curvePointUpdateFailure_shouldReturnStatusNotFound() {
+    public void testDeleteBid() {
         // Arrange
-        CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.updateCurvePoint(curvePoint)).thenReturn(null);
+        int id = 1;
 
         // Act
-        ResponseEntity<CurvePoint> response = curvePointController.updateCurvePoint(curvePoint.getId(), curvePoint);
+        String viewName = curvePointController.deleteCurve(id, model);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(curvePointService).updateCurvePoint(curvePoint);
+        assertEquals("redirect:/curvePoint/list", viewName);
     }
-
-    @Test
-    public void testDeleteCurvePoint_curvePointExists_shouldReturnStatusNoContent() {
-        // Arrange
-        CurvePoint curvePoint = new CurvePoint();
-        when(curvePointService.getCurvePointById(1)).thenReturn(Optional.of(curvePoint));
-
-        // Act
-        ResponseEntity<Void> response = curvePointController.deleteCurvePoint(1);
-
-        // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(curvePointService).deleteCurvePointById(1);
-    }
-
-    @Test
-    public void testDeleteCurvePoint_curvePointNotFound_shouldReturnStatusNotFound() {
-        // Arrange
-        when(curvePointService.getCurvePointById(1)).thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<Void> response = curvePointController.deleteCurvePoint(1);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(curvePointService, never()).deleteCurvePointById(1);
-    }
-
+    
 }
-*/

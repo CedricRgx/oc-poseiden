@@ -1,7 +1,6 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.service.impl.BidListService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

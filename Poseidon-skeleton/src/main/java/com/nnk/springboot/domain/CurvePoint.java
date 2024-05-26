@@ -1,6 +1,8 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -44,6 +46,7 @@ public class CurvePoint {
     /**
      * The identifier of the curve of the curvepoint.
      */
+    @NotNull(message="{curveId.notnull}")
     @Column(name="CurveId")
     private Integer curveId;
 
