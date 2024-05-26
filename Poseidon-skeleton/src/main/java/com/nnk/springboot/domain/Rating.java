@@ -45,21 +45,21 @@ public class Rating {
      * The moodysRating of the rating.
      */
     @Size(max=125, message = "{moodysRating.size}")
-    @Column(name="moodysRating", length=125)
+    @Column(name="moodysRating")
     private String moodysRating;
 
     /**
      * The sandPRating of the rating.
      */
     @Size(max=125, message = "{sandPRating.size}")
-    @Column(name="sandPRating", length=125)
+    @Column(name="sandPRating")
     private String sandPRating;
 
     /**
      * The fitchRating of the rating.
      */
     @Size(max=125, message = "{fitchRating.size}")
-    @Column(name="fitchRating", length=125)
+    @Column(name="fitchRating")
     private String fitchRating;
 
     /**

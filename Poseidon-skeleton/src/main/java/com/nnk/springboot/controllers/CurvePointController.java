@@ -84,7 +84,7 @@ public class CurvePointController {
     }
 
     /**
-     * Handles the GET request to display the form for updating a bid list.
+     * Handles the GET request to display the form for updating a curve point.
      *
      * @param id The id of the curve point to be updated.
      * @param model The Model object to be used in the view.

@@ -1,6 +1,7 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -47,37 +48,43 @@ public class RuleName {
     /**
      * The name of the rulename.
      */
-    @Column(name="name", length=125)
+    @Size(max=125, message = "{name.size}")
+    @Column(name="name")
     private String name;
 
     /**
      * The description of the rulename.
      */
-    @Column(name="description", length=125)
+    @Size(max=125, message = "{description.size}")
+    @Column(name="description")
     private String description;
 
     /**
      * The json of the rulename.
      */
-    @Column(name="json", length=125)
+    @Size(max=125, message = "{json.size}")
+    @Column(name="json")
     private String json;
 
     /**
      * The template of the rulename.
      */
-    @Column(name="template", length=125)
+    @Size(max=125, message = "{template.size}")
+    @Column(name="template")
     private String template;
 
     /**
      * The sqlStr of the rulename.
      */
-    @Column(name="sqlStr", length=125)
+    @Size(max=125, message = "{sqlStr.size}")
+    @Column(name="sqlStr")
     private String sqlStr;
 
     /**
      * The sqlPart of the rulename.
      */
-    @Column(name="sqlPart", length=125)
+    @Size(max=125, message = "{sqlPart.size}")
+    @Column(name="sqlPart")
     private String sqlPart;
 
 }

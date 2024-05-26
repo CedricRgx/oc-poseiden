@@ -2,7 +2,6 @@ package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
-import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.service.IRuleNameService;
 import jakarta.persistence.EntityNotFoundException;

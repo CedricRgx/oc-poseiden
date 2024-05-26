@@ -62,13 +62,13 @@ public class RatingController {
     }
 
     /**
-     * Handles the POST request to validate and save a rating point.
+     * Handles the POST request to validate and save a rating.
      *
-     * @param rating The rating point to be validated and saved.
-     * @param result The binding result which holds the validation results for the rating point.
+     * @param rating The rating to be validated and saved.
+     * @param result The binding result which holds the validation results for the rating.
      * @param model The Model object to be used in the view.
      * @return A String indicating the next view. If there are errors, it returns to the add view.
-     *         If the rating point is successfully saved, it redirects to the rating point view.
+     *         If the rating point is successfully saved, it redirects to the rating view.
      */
     @PostMapping("/rating/validate")
     public String validate(@Valid @ModelAttribute("rating") Rating rating, BindingResult result, Model model) {
@@ -84,7 +84,7 @@ public class RatingController {
     }
 
     /**
-     * Handles the GET request to display the form for updating a bid list.
+     * Handles the GET request to display the form for updating a rating.
      *
      * @param id The id of the rating point to be updated.
      * @param model The Model object to be used in the view.
@@ -104,11 +104,11 @@ public class RatingController {
     }
 
     /**
-     * Handles the POST request to update a rating point.
+     * Handles the POST request to update a rating.
      *
      * @param id The id of the rating point to be updated.
-     * @param rating The updated rating point.
-     * @param result The binding result which holds the validation results for the rating point.
+     * @param rating The updated rating.
+     * @param result The binding result which holds the validation results for the rating.
      * @param model The Model object to be used in the view.
      * @return A string indicating the next view. If there are errors, it returns to the update view.
      *         If the bid list is successfully updated, it redirects to the list view.
@@ -127,9 +127,9 @@ public class RatingController {
     }
 
     /**
-     * Handles the POST request to delete a rating point by id.
+     * Handles the POST request to delete a rating by id.
      *
-     * @param id    The id of the rating point to be deleted.
+     * @param id    The id of the rating to be deleted.
      * @param model The Model object to be used in the view.
      * @return A String that represents the list of rating to be returned.
      */
