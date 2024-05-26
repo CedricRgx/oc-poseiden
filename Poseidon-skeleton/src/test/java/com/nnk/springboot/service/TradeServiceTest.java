@@ -1,5 +1,6 @@
 package com.nnk.springboot.service;
 
+import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.service.impl.TradeService;
@@ -15,8 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class TradeServiceTest {
@@ -45,15 +47,19 @@ public class TradeServiceTest {
     @Test
     public void testGetTradeById() {
         // Arrange
+        Trade trade = new Trade();
         int tradeId = 1;
-        Trade expectedTrade = new Trade();
-        when(tradeRepository.findById(tradeId)).thenReturn(Optional.of(expectedTrade));
+        when(tradeRepository.existsById(tradeId)).thenReturn(true);
+        when(tradeRepository.findById(tradeId)).thenReturn(Optional.of(trade));
 
         // Act
         Optional<Trade> actualTrade = tradeService.getTradeById(tradeId);
 
         // Assert
-        assertEquals(expectedTrade, actualTrade.get());
+        assertTrue(actualTrade.isPresent());
+        assertEquals(trade, actualTrade.get());
+        verify(tradeRepository, times(1)).existsById(tradeId);
+        verify(tradeRepository, times(1)).findById(tradeId);
     }
 
     @Test
@@ -70,14 +76,15 @@ public class TradeServiceTest {
     }
 
     @Test
-    void testDeleteTradeById() {
+    public void testDeleteTradeById() {
         // Arrange
         int tradeId = 1;
+        when(tradeRepository.existsById(tradeId)).thenReturn(true);
 
         // Act
         tradeService.deleteTradeById(tradeId);
 
         // Assert
-        verify(tradeRepository, Mockito.times(1)).deleteById(tradeId);
+        verify(tradeRepository, Mockito.times(1)).deleteById(any());
     }
 }

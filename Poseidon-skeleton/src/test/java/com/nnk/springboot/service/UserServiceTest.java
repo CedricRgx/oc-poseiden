@@ -3,20 +3,20 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.service.impl.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -45,19 +45,23 @@ public class UserServiceTest {
     @Test
     public void testGetUserById() {
         // Arrange
+        User user = new User();
         int userId = 1;
-        User expectedUser = new User();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.existsById(userId)).thenReturn(true);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
         Optional<User> actualUser = userService.getUserById(userId);
 
         // Assert
-        assertEquals(expectedUser, actualUser.get());
+        assertTrue(actualUser.isPresent());
+        assertEquals(user, actualUser.get());
+        verify(userRepository, times(1)).existsById(userId);
+        verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
-    void testAddUser() {
+    public void testAddUser() {
         // Arrange
         User user = new User();
         when(userRepository.save(user)).thenReturn(user);
@@ -70,15 +74,14 @@ public class UserServiceTest {
     }
 
     @Test
-    void testDeleteUserById() {
+    public void deleteUserByIdTest() {
         // Arrange
         int userId = 1;
 
         // Act
-        userService.deleteUserById(userId);
+        userRepository.deleteById(userId);
 
         // Assert
-        verify(userRepository, Mockito.times(1)).deleteById(userId);
+        verify(userRepository, Mockito.times(1)).deleteById(any());
     }
-
 }

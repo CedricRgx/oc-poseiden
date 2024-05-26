@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Implements the AuthenticationSuccessHandler interface from Spring Security.
+ * Implements the AuthenticationSuccessHandler interface from Spring Security
  */
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 

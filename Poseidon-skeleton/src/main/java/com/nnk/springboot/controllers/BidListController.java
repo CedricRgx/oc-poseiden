@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.service.impl.BidListService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -24,8 +25,12 @@ public class BidListController {
 
     private static final Logger logger = LoggerFactory.getLogger(BidListController.class);
 
+    private final BidListService bidListService;
+
     @Autowired
-    private BidListService bidListService;
+    public BidListController(BidListService bidListService) {
+        this.bidListService = bidListService;
+    }
 
     /**
      * Displays the list of bidLists.
@@ -35,13 +40,13 @@ public class BidListController {
      */
     @GetMapping("/bidList/list")
     public String home(Model model){
-        logger.info("/bidList/list template");
+        logger.info("Loading Bid List list page");
         List<BidList> bidLists = bidListService.getBidLists();
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(bidLists == null) {
-            logger.info("Error when displaying bidLists on list template");
+            logger.error("Error retrieving bidLists for list page");
         } else {
-            logger.info("Success in displaying bidLists on list template");
+            logger.info("Successfully retrieved bidLists for list page");
             model.addAttribute("bidLists", bidLists);
             model.addAttribute("user", userDetails);
         }
@@ -56,7 +61,7 @@ public class BidListController {
      */
     @GetMapping("/bidList/add")
     public String addBidForm(BidList bid) {
-        logger.info("/bidList/add template");
+        logger.info("Loading add bid form");
         return "bidList/add";
     }
 
@@ -71,12 +76,14 @@ public class BidListController {
      */
     @PostMapping("/bidList/validate")
     public String validate(@Valid @ModelAttribute("bidList") BidList bidList, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
+        logger.info("Bid List validation started");
         if(result.hasErrors()) {
             model.addAttribute("bidList", bidList);
+            logger.error("Bid List validation has errors");
             return "bidList/add";
         }
         bidListService.addBidList(bidList);
+        logger.info("Bid List validation finished successfully, Bid List added");
         return "redirect:/bidList/list";
     }
 
@@ -90,10 +97,12 @@ public class BidListController {
      */
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
+        logger.info("Show update form for Bid List with id: " + id);
         Optional<BidList> bid = bidListService.getBidListById(id);
         if(bid.isPresent()) {
             model.addAttribute("bidList", bid.get());
+        }else{
+            logger.warn("Bid List with id: " + id + " not found");
         }
         return "bidList/update";
     }
@@ -110,12 +119,14 @@ public class BidListController {
      */
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList, BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
+        logger.info("Updating Bid List with id: " + id);
         if(result.hasErrors()) {
             model.addAttribute("bidList", bidList);
+            logger.error("Error updating Bid List with id: " + id);
             return "bidList/update";
         }
         bidListService.updateBidList(bidList);
+        logger.info("Updated Bid List with id: " + id);
         return "redirect:/bidList/list";
     }
 
@@ -128,8 +139,9 @@ public class BidListController {
      */
     @PostMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
+        logger.info("Deleting Bid List with id: " + id);
         bidListService.deleteBidListById(id);
+        logger.info("Deleted Bid List with id: " + id);
         return "redirect:/bidList/list";
     }
 

@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class CurvePointServiceTest {
@@ -45,19 +46,23 @@ public class CurvePointServiceTest {
     @Test
     public void testGetCurvePointById() {
         // Arrange
+        CurvePoint curvePoint = new CurvePoint();
         int curvePointId = 1;
-        CurvePoint expectedCurvePoint = new CurvePoint();
-        when(curvePointRepository.findById(curvePointId)).thenReturn(Optional.of(expectedCurvePoint));
+        when(curvePointRepository.existsById(curvePointId)).thenReturn(true);
+        when(curvePointRepository.findById(curvePointId)).thenReturn(Optional.of(curvePoint));
 
         // Act
         Optional<CurvePoint> actualCurvePoint = curvePointService.getCurvePointById(curvePointId);
 
         // Assert
-        assertEquals(expectedCurvePoint, actualCurvePoint.get());
+        assertTrue(actualCurvePoint.isPresent());
+        assertEquals(curvePoint, actualCurvePoint.get());
+        verify(curvePointRepository, times(1)).existsById(curvePointId);
+        verify(curvePointRepository, times(1)).findById(curvePointId);
     }
 
     @Test
-    void testAddCurvePoint() {
+    public void testAddCurvePoint() {
         // Arrange
         CurvePoint curvePoint = new CurvePoint();
         when(curvePointRepository.save(curvePoint)).thenReturn(curvePoint);
@@ -70,14 +75,15 @@ public class CurvePointServiceTest {
     }
 
     @Test
-    void testDeleteCurvePointById() {
+    public void testDeleteCurvePointById() {
         // Arrange
         int curvePointId = 1;
+        when(curvePointRepository.existsById(curvePointId)).thenReturn(true);
 
         // Act
         curvePointService.deleteCurvePointById(curvePointId);
 
         // Assert
-        verify(curvePointRepository, Mockito.times(1)).deleteById(curvePointId);
+        verify(curvePointRepository, Mockito.times(1)).deleteById(any());
     }
 }

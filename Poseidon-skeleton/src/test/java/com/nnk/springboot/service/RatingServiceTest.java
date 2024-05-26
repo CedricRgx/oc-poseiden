@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class RatingServiceTest {
@@ -45,19 +46,23 @@ public class RatingServiceTest {
     @Test
     public void testGetRatingById() {
         // Arrange
+        Rating rating = new Rating();
         int ratingId = 1;
-        Rating expectedRating = new Rating();
-        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(expectedRating));
+        when(ratingRepository.existsById(ratingId)).thenReturn(true);
+        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
 
         // Act
         Optional<Rating> actualRating = ratingService.getRatingById(ratingId);
 
         // Assert
-        assertEquals(expectedRating, actualRating.get());
+        assertTrue(actualRating.isPresent());
+        assertEquals(rating, actualRating.get());
+        verify(ratingRepository, times(1)).existsById(ratingId);
+        verify(ratingRepository, times(1)).findById(ratingId);
     }
 
     @Test
-    void testAddRating() {
+    public void testAddRating() {
         // Arrange
         Rating rating = new Rating();
         when(ratingRepository.save(rating)).thenReturn(rating);
@@ -70,14 +75,15 @@ public class RatingServiceTest {
     }
 
     @Test
-    void testDeleteRatingById() {
+    public void testDeleteRatingById() {
         // Arrange
         int ratingId = 1;
+        when(ratingRepository.existsById(ratingId)).thenReturn(true);
 
         // Act
         ratingService.deleteRatingById(ratingId);
 
         // Assert
-        verify(ratingRepository, Mockito.times(1)).deleteById(ratingId);
+        verify(ratingRepository, Mockito.times(1)).deleteById(any());
     }
 }

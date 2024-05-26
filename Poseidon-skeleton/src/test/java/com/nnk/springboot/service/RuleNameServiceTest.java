@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class RuleNameServiceTest {
@@ -45,15 +46,19 @@ public class RuleNameServiceTest {
     @Test
     public void testGetRuleNameById() {
         // Arrange
+        RuleName ruleName = new RuleName();
         int ruleNameId = 1;
-        RuleName expectedRuleName = new RuleName();
-        when(ruleNameRepository.findById(ruleNameId)).thenReturn(Optional.of(expectedRuleName));
+        when(ruleNameRepository.existsById(ruleNameId)).thenReturn(true);
+        when(ruleNameRepository.findById(ruleNameId)).thenReturn(Optional.of(ruleName));
 
         // Act
         Optional<RuleName> actualRuleName = ruleNameService.getRuleNameById(ruleNameId);
 
         // Assert
-        assertEquals(expectedRuleName, actualRuleName.get());
+        assertTrue(actualRuleName.isPresent());
+        assertEquals(ruleName, actualRuleName.get());
+        verify(ruleNameRepository, times(1)).existsById(ruleNameId);
+        verify(ruleNameRepository, times(1)).findById(ruleNameId);
     }
 
     @Test
@@ -70,14 +75,15 @@ public class RuleNameServiceTest {
     }
 
     @Test
-    void testDeleteRuleNameById() {
+    public void testDeleteRuleNameById() {
         // Arrange
         int ruleNameId = 1;
+        when(ruleNameRepository.existsById(ruleNameId)).thenReturn(true);
 
         // Act
         ruleNameService.deleteRuleNameById(ruleNameId);
 
         // Assert
-        verify(ruleNameRepository, Mockito.times(1)).deleteById(ruleNameId);
+        verify(ruleNameRepository, Mockito.times(1)).deleteById(any());
     }
 }
