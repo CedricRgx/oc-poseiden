@@ -1,4 +1,3 @@
-/*
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
@@ -8,166 +7,115 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RuleNameControllerTest {
 
-    @Mock
-    private RuleNameService ruleNameService;
-
     @InjectMocks
     private RuleNameController ruleNameController;
 
+    @Mock
+    RuleNameService ruleNameService;
+
+    @Mock
+    Model model;
+
+    @Mock
+    BindingResult bindingResult;
+
     @Test
-    public void testGetAllRuleNames_RuleNameExists_ShouldReturnFound() {
+    public void testHome() {
         // Arrange
-        RuleName ruleNameOne = new RuleName();
-        RuleName ruleNameTwo = new RuleName();
-        List<RuleName> ruleNames = Arrays.asList(ruleNameOne, ruleNameTwo);
-        when(ruleNameService.getRuleNames()).thenReturn(ruleNames);
+        when(ruleNameService.getRuleNames()).thenReturn(new ArrayList<>());
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
 
         // Act
-        ResponseEntity<List<RuleName>> response = ruleNameController.getAllRuleNames();
+        String viewName = ruleNameController.home(model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(ruleNames, response.getBody());
+        assertEquals("ruleName/list", viewName);
     }
 
     @Test
-    public void testGetAllRuleNames_NoRuleNameExists_ShouldReturnNotFound() {
-        // Arrange
-        when(ruleNameService.getRuleNames()).thenReturn(Collections.emptyList());
-
-        // Act
-        ResponseEntity<List<RuleName>> response = ruleNameController.getAllRuleNames();
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
-    }
-
-    @Test
-    public void testGetRuleNameById_RuleNameExists_ShouldReturnFound() {
+    public void testAddRuleNameForm() {
         // Arrange
         RuleName ruleName = new RuleName();
-        when(ruleNameService.getRuleNameById(1)).thenReturn(Optional.of(ruleName));
 
         // Act
-        ResponseEntity<RuleName> response = ruleNameController.getRuleNameById(1);
+        String viewName = ruleNameController.addRuleNameForm(ruleName);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(ruleName, response.getBody());
+        assertEquals("ruleName/add", viewName);
     }
 
     @Test
-    public void getRuleNameById_RuleNameDoesNotExist_ShouldReturnNotFound() {
-        // Arrange
-        Integer ruleNameId = 1;
-        when(ruleNameService.getRuleNameById(1)).thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<RuleName> response;
-        response = ruleNameController.getRuleNameById(ruleNameId);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddNewRuleName_ruleNameAddedSuccessfully_shouldReturnStatusCreated() {
+    public void testValidate() {
         // Arrange
         RuleName ruleName = new RuleName();
-        when(ruleNameService.addRuleName(ruleName)).thenReturn(ruleName);
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<RuleName> response = ruleNameController.addNewRuleName(ruleName);
+        String viewName = ruleNameController.validate(ruleName, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(ruleName, response.getBody());
+        assertEquals("redirect:/ruleName/list", viewName);
     }
 
     @Test
-    public void testAddNewRuleName_ruleNameAddedFailure_shouldReturnStatusBadRequest() {
+    public void testShowUpdateForm() {
         // Arrange
+        int id = 1;
+        Optional<RuleName> ruleName = Optional.of(new RuleName());
+        when(ruleNameService.getRuleNameById(id)).thenReturn(ruleName);
+
+        // Act
+        String viewName = ruleNameController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("ruleName/update", viewName);
+    }
+
+    @Test
+    public void testUpdateRuleName() {
+        // Arrange
+        int id = 1;
         RuleName ruleName = new RuleName();
-        when(ruleNameService.addRuleName(ruleName)).thenReturn(null);
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<RuleName> response = ruleNameController.addNewRuleName(ruleName);
+        String viewName = ruleNameController.updateRuleName(id, ruleName, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
+        assertEquals("redirect:/ruleName/list", viewName);
     }
 
     @Test
-    public void testUpdateRuleName_ruleNameUpdatedSuccessfully_shouldReturnStatusOk() {
+    public void testDeleteRuleName() {
         // Arrange
-        RuleName ruleName = new RuleName();
-        when(ruleNameService.updateRuleName(ruleName)).thenReturn(ruleName);
+        int id = 1;
 
         // Act
-        ResponseEntity<RuleName> response = ruleNameController.updateRuleName(ruleName.getId(), ruleName);
+        String viewName = ruleNameController.deleteRuleName(id, model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(ruleName, response.getBody());
-        verify(ruleNameService).updateRuleName(ruleName);
-    }
-
-    @Test
-    public void testUpdateRuleName_ruleNameUpdateFailure_shouldReturnStatusNotFound() {
-        // Arrange
-        RuleName ruleName = new RuleName();
-        when(ruleNameService.updateRuleName(ruleName)).thenReturn(null);
-
-        // Act
-        ResponseEntity<RuleName> response = ruleNameController.updateRuleName(ruleName.getId(), ruleName);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(ruleNameService).updateRuleName(ruleName);
-    }
-
-    @Test
-    public void testDeleteRuleName_ruleNameExists_shouldReturnStatusNoContent() {
-        // Arrange
-        RuleName ruleName = new RuleName();
-        when(ruleNameService.getRuleNameById(1)).thenReturn(Optional.of(ruleName));
-
-        // Act
-        ResponseEntity<Void> response = ruleNameController.deleteRuleName(1);
-
-        // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(ruleNameService).deleteRuleNameById(1);
-    }
-
-    @Test
-    public void testDeleteRuleName_ruleNameNotFound_shouldReturnStatusNotFound() {
-        // Arrange
-        when(ruleNameService.getRuleNameById(1)).thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<Void> response = ruleNameController.deleteRuleName(1);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(ruleNameService, never()).deleteRuleNameById(1);
+        assertEquals("redirect:/ruleName/list", viewName);
     }
 
 }
-*/

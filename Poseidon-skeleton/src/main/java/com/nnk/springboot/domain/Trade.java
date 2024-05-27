@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -78,14 +79,16 @@ public class Trade {
      * The account of the trade.
      */
     @NotNull
-    @Column(name="account", nullable=false, length=30)
+    @Size(max=30, message ="{accountTrade.size}")
+    @Column(name="account")
     private String account;
 
     /**
      * The type of the trade.
      */
     @NotNull
-    @Column(name="type", nullable=false, length=30)
+    @Size(max=30, message ="{typeTrade.size}")
+    @Column(name="type")
     private String type;
 
     /**

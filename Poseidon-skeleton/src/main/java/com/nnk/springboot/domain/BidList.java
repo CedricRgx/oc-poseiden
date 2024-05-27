@@ -83,7 +83,7 @@ public class BidList {
      */
     @NotNull(message="{account.notnull}")
     @NotEmpty(message="{account.notempty}")
-    @Size(max=30)
+    @Size(max=30, message ="{accountBid.size}")
     @Column(name="account")
     private String account;
 
@@ -92,7 +92,7 @@ public class BidList {
      */
     @NotNull(message="{type.notnull}")
     @NotEmpty(message="{type.notempty}")
-    @Size(max=30)
+    @Size(max=30, message ="{typeBid.size}")
     @Column(name="type")
     private String type;
 

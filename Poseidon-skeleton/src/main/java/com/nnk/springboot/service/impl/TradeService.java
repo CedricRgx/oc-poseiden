@@ -2,7 +2,6 @@ package com.nnk.springboot.service.impl;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
-import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.service.ITradeService;
 import jakarta.persistence.EntityNotFoundException;
