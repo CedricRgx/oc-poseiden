@@ -39,7 +39,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 redirectStrategy.sendRedirect(request, response, "/bidList/list");
                 break;
             } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
-                redirectStrategy.sendRedirect(request, response, "/home");
+                redirectStrategy.sendRedirect(request, response, "/");
                 break;
             } else {
                 throw new IllegalStateException();

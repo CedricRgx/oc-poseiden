@@ -20,11 +20,11 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public CustomUserDetailsService(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Loads the user details required by Spring Security for authentication and authorization, based on the username provided.
