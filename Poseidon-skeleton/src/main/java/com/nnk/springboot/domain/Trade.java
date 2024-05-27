@@ -26,6 +26,19 @@ public class Trade {
      * @param account       the account name
      * @param type          the type of trade
      * @param buyQuantity   the quantity of buy
+     */
+    public Trade(String account, String type, Double buyQuantity) {
+        this.account = account;
+        this.type = type;
+        this.buyQuantity = buyQuantity;
+    }
+
+    /**
+     * Construct a Trade with its attributes
+     *
+     * @param account       the account name
+     * @param type          the type of trade
+     * @param buyQuantity   the quantity of buy
      * @param sellQuantity  the quantity of sell
      * @param buyPrice      the price of buy
      * @param sellPrice     the price of sell

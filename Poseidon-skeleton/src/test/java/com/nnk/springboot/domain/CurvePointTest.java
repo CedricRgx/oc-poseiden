@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CurvePointTest {
 
     private CurvePoint curvePoint;
+    private int curveId = 42;
     private Timestamp asOfDate = Timestamp.valueOf(LocalDate.of(2020, 05, 05).atStartOfDay());
     private Double term = 100.00;
     private Double value = 200.00;
@@ -22,7 +23,7 @@ public class CurvePointTest {
 
     @BeforeEach
     public void setUp() {
-        curvePoint = new CurvePoint(asOfDate, term, value, creationDate);
+        curvePoint = new CurvePoint(curveId, asOfDate, term, value, creationDate);
     }
 
     @Test

@@ -27,6 +27,19 @@ public class BidList {
      * @param account        the account identifier.
      * @param type           the type of bid.
      * @param bidQuantity    the quantity of bid.
+     */
+    public BidList(String account, String type, Double bidQuantity) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+    }
+
+    /**
+     * Constructor to create an instance of BidList with provided details.
+     *
+     * @param account        the account identifier.
+     * @param type           the type of bid.
+     * @param bidQuantity    the quantity of bid.
      * @param askQuantity    the quantity of ask.
      * @param bid            the bid amount.
      * @param ask            the ask amount.

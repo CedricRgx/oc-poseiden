@@ -22,12 +22,27 @@ public class CurvePoint {
     /**
      * Construct a CurvePoint with its attributes
      *
+     * @param curveId the id of curve
+     * @param term  the period of time
+     * @param value the value at a given point in time
+     */
+    public CurvePoint(int curveId, Double term, Double value) {
+        this.curveId = curveId;
+        this.term = term;
+        this.value = value;
+    }
+
+    /**
+     * Construct a CurvePoint with its attributes
+     *
+     * @param curveId the id of curve
      * @param asOfDate the reference date
      * @param term  the period of time
      * @param value the value at a given point in time
      * @param creationDate the date at which the value was recorded
      */
-    public CurvePoint(Timestamp asOfDate, Double term, Double value, Timestamp creationDate) {
+    public CurvePoint(int curveId, Timestamp asOfDate, Double term, Double value, Timestamp creationDate) {
+        this.curveId = curveId;
         this.asOfDate = asOfDate;
         this.term = term;
         this.value = value;
