@@ -1,0 +1,26 @@
+/.idea/dataSources/69b0cfc8-b6c5-46be-9371-fc228c61d38b.xml
+
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# Ignorer tous les fichiers .class
+*.class
+
+# Ignorer le répertoire target/ qui contient les fichiers compilés pour Maven
+/target/
+
+# Ignorer d'autres fichiers générés par des outils de construction
+*.log
+*.tmp
+*.out
+*.swp
+/logs/app.log
+/.idea/dataSources.local.xml
+/.idea/dataSources/69b0cfc8-b6c5-46be-9371-fc228c61d38b/storage_v2/_src_/schema/poseiden.FSdVLA.meta
+/.idea/dataSources/69b0cfc8-b6c5-46be-9371-fc228c61d38b/storage_v2/_src_/schema/poseidon.SyhVLA.meta
