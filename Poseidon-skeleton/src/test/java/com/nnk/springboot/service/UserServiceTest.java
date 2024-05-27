@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -64,6 +62,11 @@ public class UserServiceTest {
     public void testAddUser() {
         // Arrange
         User user = new User();
+        user.setUsername("testUser");
+        user.setPassword("testPassword");
+        user.setFullname("Test Fullname");
+        user.setRole("ROLE_USER");
+        when(userRepository.isUsernameUnique(user.getUsername())).thenReturn(0);
         when(userRepository.save(user)).thenReturn(user);
 
         // Act

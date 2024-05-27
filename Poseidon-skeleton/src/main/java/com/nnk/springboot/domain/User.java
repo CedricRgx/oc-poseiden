@@ -47,13 +47,15 @@ public class User {
      * The username of the user.
      */
     @NotBlank(message = "Username is mandatory")
-    @Column(name="username", length=125)
+    @Size(max=125, message ="{username.size}")
+    @Column(name="username")
     private String username;
 
     /**
      * The password of the user.
      */
     @NotBlank(message = "Password is mandatory")
+    @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!?])(?=\\S+$).{8,}$", message = "{password.constraint}")
     @Column(name="password", length=125)
     private String password;
 
@@ -61,14 +63,15 @@ public class User {
      * The fullname of the user.
      */
     @NotBlank(message = "FullName is mandatory")
-    @Column(name="fullname", length=125)
+    @Size(max=125, message ="{fullname.size}")
+    @Column(name="fullname")
     private String fullname;
 
     /**
      * The role of the user.
      */
     @NotBlank(message = "Role is mandatory")
-    @Column(name="role", length=125)
+    @Column(name="role")
     private String role;
 
 }

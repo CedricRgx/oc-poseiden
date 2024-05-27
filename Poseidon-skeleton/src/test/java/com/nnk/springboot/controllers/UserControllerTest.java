@@ -1,4 +1,3 @@
-/*
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
@@ -8,166 +7,114 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
-    @Mock
-    private UserService userService;
-
     @InjectMocks
     private UserController userController;
 
+    @Mock
+    UserService userService;
+
+    @Mock
+    Model model;
+
+    @Mock
+    BindingResult bindingResult;
+
     @Test
-    public void testGetAllUsers_UserExists_ShouldReturnFound() {
+    public void testHome() {
         // Arrange
-        User userOne = new User("John Doe", "JohnDoe", "password", "USER");
-        User userTwo = new User("Jane Doe", "JaneDoe", "password", "USER");
-        List<User> users = Arrays.asList(userOne, userTwo);
-        when(userService.getUsers()).thenReturn(users);
+        when(userService.getUsers()).thenReturn(new ArrayList<>());
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
 
         // Act
-        ResponseEntity<List<User>> response = userController.getAllUsers();
+        String viewName = userController.home(model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(users, response.getBody());
+        assertEquals("user/list", viewName);
     }
 
     @Test
-    public void testGetAllUsers_NoUserExists_ShouldReturnNotFound() {
+    public void testAddUserForm() {
         // Arrange
-        when(userService.getUsers()).thenReturn(Collections.emptyList());
+        User user = new User();
 
         // Act
-        ResponseEntity<List<User>> response = userController.getAllUsers();
+        String viewName = userController.addUserForm(user);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
+        assertEquals("user/add", viewName);
     }
 
     @Test
-    public void testGetUserById_UserExists_ShouldReturnFound() {
+    public void testValidate() {
         // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.getUserById(1)).thenReturn(Optional.of(user));
+        User user = new User();
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<User> response = userController.getUserById(1);
+        String viewName = userController.validate(user, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals("redirect:/user/list", viewName);
     }
 
     @Test
-    public void getUserById_UserDoesNotExist_ShouldReturnNotFound() {
+    public void testShowUpdateForm() {
         // Arrange
-        Integer userId = 1;
-        when(userService.getUserById(1)).thenReturn(Optional.empty());
+        int id = 1;
+        Optional<User> user = Optional.of(new User());
+        when(userService.getUserById(id)).thenReturn(user);
 
         // Act
-        ResponseEntity<User> response;
-        response = userController.getUserById(userId);
+        String viewName = userController.showUpdateForm(id, model);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("user/update", viewName);
     }
 
     @Test
-    public void testAddNewUser_userAddedSuccessfully_shouldReturnStatusCreated() {
+    public void testUpdateUser() {
         // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.addUser(user)).thenReturn(user);
+        int id = 1;
+        User user = new User();
+        when(bindingResult.hasErrors()).thenReturn(false);
 
         // Act
-        ResponseEntity<User> response = userController.addNewUser(user);
+        String viewName = userController.updateUser(id, user, bindingResult, model);
 
         // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals("redirect:/user/list", viewName);
     }
 
     @Test
-    public void testAddNewUser_userAddedFailure_shouldReturnStatusBadRequest() {
+    public void testDeleteUser() {
         // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.addUser(user)).thenReturn(null);
+        int id = 1;
 
         // Act
-        ResponseEntity<User> response = userController.addNewUser(user);
+        String viewName = userController.deleteUser(id, model);
 
         // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
-    }
-
-    @Test
-    public void testUpdateUser_userUpdatedSuccessfully_shouldReturnStatusOk() {
-        // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.updateUser(user)).thenReturn(user);
-
-        // Act
-        ResponseEntity<User> response = userController.updateUser(user.getId(), user);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
-        verify(userService).updateUser(user);
-    }
-
-    @Test
-    public void testUpdateUser_userUpdateFailure_shouldReturnStatusNotFound() {
-        // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.updateUser(user)).thenReturn(null);
-
-        // Act
-        ResponseEntity<User> response = userController.updateUser(user.getId(), user);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(userService).updateUser(user);
-    }
-
-    @Test
-    public void testDeleteUser_userExists_shouldReturnStatusNoContent() {
-        // Arrange
-        User user = new User("John Doe", "JohnDoe", "password", "USER");
-        when(userService.getUserById(1)).thenReturn(Optional.of(user));
-
-        // Act
-        ResponseEntity<Void> response = userController.deleteUser(1);
-
-        // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(userService).deleteUserById(1);
-    }
-
-    @Test
-    public void testDeleteUser_userNotFound_shouldReturnStatusNotFound() {
-        // Arrange
-        when(userService.getUserById(1)).thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<Void> response = userController.deleteUser(1);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(userService, never()).deleteUserById(1);
+        assertEquals("redirect:/user/list", viewName);
     }
 
 }
-*/

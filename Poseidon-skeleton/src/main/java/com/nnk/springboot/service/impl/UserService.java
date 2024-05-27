@@ -1,11 +1,10 @@
 package com.nnk.springboot.service.impl;
 
-import com.nnk.springboot.controllers.UserController;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
-import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.service.IUserService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -26,10 +25,12 @@ public class UserService implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    //private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) { //, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        //this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -60,7 +61,20 @@ public class UserService implements IUserService {
     @Transactional
     public User addUser(User user){
         logger.info("Adding an user");
-        return userRepository.save(user);
+
+        logger.info("Check if the username is unique");
+        if(!isUsernameUnique(user.getUsername())) {
+            logger.error("Username {} is already in use", user.getUsername());
+            throw new EntityExistsException("Username already exists");
+        }
+        User newUser = new User(
+            user.getUsername(),
+            //passwordEncoder.encode(user.getPassword()),
+            user.getPassword(),
+            user.getFullname(),
+            user.getRole()
+        );
+        return userRepository.save(newUser);
     }
 
     /**
@@ -94,7 +108,7 @@ public class UserService implements IUserService {
     public Optional<User> findByUsername(String username){
         logger.info("Retrieving an user by its username");
         Optional<User> user = userRepository.findByUsername(username);
-        if(user == null){
+        if(user.isEmpty()){
             throw new EntityNotFoundException("User not found");
         }
         return user;
@@ -110,6 +124,17 @@ public class UserService implements IUserService {
         if(!userRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("User is not found ", id);
         }
+    }
+
+    /**
+     * Check if username is unique
+     * @param username username for query
+     * @return boolean
+     */
+    public boolean isUsernameUnique(String username){
+        logger.info("Checking if an username doesn't already exist");
+        int count = userRepository.isUsernameUnique(username);
+        return count==0;
     }
 
 }

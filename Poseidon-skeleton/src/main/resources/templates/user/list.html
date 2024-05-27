@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
@@ -36,8 +36,13 @@
 					<td th:text="${user.username}"></td>
 					<td style="width: 25%" th:text="${user.role}"></td>
 					<td style="width: 15%" class="text-center">
-						<a th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>&nbsp;|&nbsp;
-						<a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+						<form th:action="@{/user/update/{id}(id=${user.id})}" method="GET" style="display: inline;">
+							<input type="submit" value="Edit" class="btn btn-primary btn-sm" />
+						</form>
+						&nbsp;|&nbsp;
+						<form th:action="@{/user/delete/{id}(id=${user.id})}" method="POST" style="display: inline;">
+							<input type="submit" value="Delete" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure to delete this item?');"/>
+						</form>
 					</td>
 				</tr>
 			</tbody>

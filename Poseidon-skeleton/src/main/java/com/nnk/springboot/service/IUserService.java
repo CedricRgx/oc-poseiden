@@ -1,8 +1,6 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.User;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
