@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.impl.UserService;
+import jakarta.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +79,15 @@ public class UserController {
             logger.error("User validation has errors");
             return "user/add";
         }
-        userService.addUser(user);
-        logger.info("User validation finished successfully, User added");
-        return "redirect:/user/list";
+        try{
+            userService.addUser(user);
+            logger.info("User validation finished successfully, User added");
+            return "redirect:/user/list";
+        }catch(EntityExistsException ex){
+            model.addAttribute("usernameError", "Username already exists");
+            return "user/add";
+        }
+
     }
 
     /**

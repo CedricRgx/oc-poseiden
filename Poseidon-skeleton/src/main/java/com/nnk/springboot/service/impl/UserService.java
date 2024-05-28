@@ -1,5 +1,6 @@
 package com.nnk.springboot.service.impl;
 
+import com.nnk.springboot.config.CustomUserDetailsService;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +27,14 @@ public class UserService implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-    //private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public UserService(UserRepository userRepository) { //, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, @Lazy CustomUserDetailsService customUserDetailsService) {
         this.userRepository = userRepository;
-        //this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     /**
@@ -69,8 +73,7 @@ public class UserService implements IUserService {
         }
         User newUser = new User(
             user.getUsername(),
-            //passwordEncoder.encode(user.getPassword()),
-            user.getPassword(),
+            passwordEncoder.encode(user.getPassword()),
             user.getFullname(),
             user.getRole()
         );
