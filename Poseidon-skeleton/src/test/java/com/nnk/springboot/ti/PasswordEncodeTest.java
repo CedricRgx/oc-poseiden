@@ -1,4 +1,4 @@
-package com.nnk.springboot;
+package com.nnk.springboot.ti;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,16 +6,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
-/**
- * Created by Khang Nguyen.
- * Email: khang.nguyen@banvien.com
- * Date: 09/03/2019
- * Time: 11:26 AM
- */
-
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+@SpringBootTest(properties = {"spring.profiles.active=test"})
 public class PasswordEncodeTest {
 
     @Test

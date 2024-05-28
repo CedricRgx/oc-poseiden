@@ -1,4 +1,4 @@
-package com.nnk.springboot;
+package com.nnk.springboot.ti;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+@SpringBootTest(properties = {"spring.profiles.active=test"})
 public class RuleTest {
 
 	@Autowired

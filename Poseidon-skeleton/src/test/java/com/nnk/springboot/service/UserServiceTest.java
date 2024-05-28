@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +22,14 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    @InjectMocks
+    private UserService userService;
+
     @Mock
     private UserRepository userRepository;
 
-    @InjectMocks
-    private UserService userService;
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void testGetUsers() {
@@ -64,9 +70,10 @@ public class UserServiceTest {
         User user = new User();
         user.setUsername("testUser");
         user.setPassword("testPassword");
-        user.setFullname("Test Fullname");
+        user.setFullname("TestFullname");
         user.setRole("ROLE_USER");
         when(userRepository.isUsernameUnique(user.getUsername())).thenReturn(0);
+        when(passwordEncoder.encode(user.getPassword())).thenReturn("testPassword");
         when(userRepository.save(user)).thenReturn(user);
 
         // Act
@@ -74,6 +81,7 @@ public class UserServiceTest {
 
         // Assert
         assertEquals(user, actualUser);
+        assertEquals("testPassword", actualUser.getPassword());
     }
 
     @Test
