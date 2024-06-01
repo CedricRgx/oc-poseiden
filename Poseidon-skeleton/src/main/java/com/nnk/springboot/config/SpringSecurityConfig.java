@@ -51,7 +51,10 @@ public class SpringSecurityConfig {
                 .logout()
                 .logoutUrl("/app-logout")
                 .logoutSuccessUrl("/login?logout=true")
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/403");
         return http.build();
     }
 
