@@ -40,7 +40,7 @@ public class SpringSecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                //.defaultSuccessUrl("/bidList/list", true)
+                .loginPage("/login")
                 .successHandler(customAuthenticationSuccessHandler())
                 .permitAll()
                 .and()
@@ -54,7 +54,7 @@ public class SpringSecurityConfig {
                 .permitAll()
                 .and()
                 .exceptionHandling()
-                .accessDeniedPage("/403");
+                .accessDeniedPage("/error403");
         return http.build();
     }
 

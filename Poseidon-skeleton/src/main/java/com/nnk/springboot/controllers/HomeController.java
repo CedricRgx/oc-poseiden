@@ -26,10 +26,6 @@ public class HomeController {
 
 	@GetMapping("/admin/home")
 	public String adminHome(Model model){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-			return "403";
-		}
 		return "redirect:/bidList/list";
 	}
 
