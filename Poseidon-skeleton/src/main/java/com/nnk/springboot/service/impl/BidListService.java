@@ -97,7 +97,7 @@ public class BidListService implements IBidListService {
      * @param id An integer representing the ID of the BidList.
      * @throws EntityNotFoundException if no BidList with the provided ID is found in the repository.
      */
-    private void verifyBidListExistence(int id){
+    public void verifyBidListExistence(int id){
         if(!bidListRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("BidList is not found ", id);
         }

@@ -1,8 +1,10 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.service.impl.RuleNameService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,6 +76,28 @@ public class RuleNameServiceTest {
     }
 
     @Test
+    public void testUpdateRuleName() {
+        // Arrange
+        int existentRuleNameId = 1;
+        int nonExistentRuleNameId = 2;
+        RuleName existentRuleName = new RuleName();
+        existentRuleName.setId(existentRuleNameId);
+        existentRuleName.setName("rulename");
+        RuleName nonExistentRuleName = new RuleName();
+        nonExistentRuleName.setId(nonExistentRuleNameId);
+        nonExistentRuleName.setName("rulename");
+
+        // // Act
+        when(ruleNameRepository.existsById(existentRuleNameId)).thenReturn(true);
+        when(ruleNameRepository.existsById(nonExistentRuleNameId)).thenReturn(false);
+        when(ruleNameRepository.save(existentRuleName)).thenReturn(existentRuleName);
+
+        // Arrange
+        assertDoesNotThrow(() -> ruleNameService.updateRuleName(existentRuleName));
+        assertThrows(EntityNotFoundException.class, () -> ruleNameService.updateRuleName(nonExistentRuleName));
+    }
+
+    @Test
     public void testDeleteRuleNameById() {
         // Arrange
         int ruleNameId = 1;
@@ -84,5 +108,20 @@ public class RuleNameServiceTest {
 
         // Assert
         verify(ruleNameRepository, Mockito.times(1)).deleteById(any());
+    }
+
+    @Test
+    public void testVerifyRuleNameExistence() {
+        // Arrange
+        int existentRuleNameId = 1;
+        int nonExistentRuleNameId = 2;
+
+        // Act
+        when(ruleNameRepository.existsById(existentRuleNameId)).thenReturn(true);
+        when(ruleNameRepository.existsById(nonExistentRuleNameId)).thenReturn(false);
+
+        // Assert
+        assertDoesNotThrow(() -> ruleNameService.verifyRuleNameExistence(existentRuleNameId));
+        assertThrows(PoseidonEntityNotFoundException.class, () -> ruleNameService.verifyRuleNameExistence(nonExistentRuleNameId));
     }
 }

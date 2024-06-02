@@ -123,7 +123,7 @@ public class UserService implements IUserService {
      * @param id An integer representing the ID of the User.
      * @throws EntityNotFoundException if no User with the provided ID is found in the repository.
      */
-    private void verifyUserExistence(int id){
+    public void verifyUserExistence(int id){
         if(!userRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("User is not found ", id);
         }

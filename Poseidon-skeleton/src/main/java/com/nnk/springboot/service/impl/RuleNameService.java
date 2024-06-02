@@ -89,7 +89,7 @@ public class RuleNameService implements IRuleNameService {
      * @param id An integer representing the ID of the RuleName.
      * @throws EntityNotFoundException if no RuleName with the provided ID is found in the repository.
      */
-    private void verifyRuleNameExistence(int id){
+    public void verifyRuleNameExistence(int id){
         if(!ruleNameRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("RuleName is not found ", id);
         }

@@ -89,7 +89,7 @@ public class TradeService implements ITradeService {
      * @param id An integer representing the ID of the Trade.
      * @throws EntityNotFoundException if no Trade with the provided ID is found in the repository.
      */
-    private void verifyTradeExistence(int id){
+    public void verifyTradeExistence(int id){
         if(!tradeRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("Trade is not found ", id);
         }

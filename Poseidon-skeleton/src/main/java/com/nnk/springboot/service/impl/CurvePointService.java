@@ -89,7 +89,7 @@ public class CurvePointService implements ICurvePointService {
      * @param id An integer representing the ID of the CurvePoint.
      * @throws EntityNotFoundException if no CurvePoint with the provided ID is found in the repository.
      */
-    private void verifyCurvePointExistence(int id){
+    public void verifyCurvePointExistence(int id){
         if(!curvePointRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("CurvePoint is not found ", id);
         }

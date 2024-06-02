@@ -89,7 +89,7 @@ public class RatingService implements IRatingService {
      * @param id An integer representing the ID of the Rating.
      * @throws EntityNotFoundException if no Rating with the provided ID is found in the repository.
      */
-    private void verifyRatingExistence(int id){
+    public void verifyRatingExistence(int id){
         if(!ratingRepository.existsById(id)){
             throw new PoseidonEntityNotFoundException("Rating is not found ", id);
         }

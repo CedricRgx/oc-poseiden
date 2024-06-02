@@ -1,8 +1,10 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.PoseidonEntityNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.service.impl.CurvePointService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,6 +76,28 @@ public class CurvePointServiceTest {
     }
 
     @Test
+    public void testUpdateCurvePoint() {
+        // Arrange
+        int existentCurvePointId = 1;
+        int nonExistentCurvePointId = 2;
+        CurvePoint existentCurvePoint = new CurvePoint();
+        existentCurvePoint.setId(existentCurvePointId);
+        existentCurvePoint.setTerm(54.32);
+        CurvePoint nonExistentCurvePoint = new CurvePoint();
+        nonExistentCurvePoint.setId(nonExistentCurvePointId);
+        nonExistentCurvePoint.setTerm(54.32);
+
+        // // Act
+        when(curvePointRepository.existsById(existentCurvePointId)).thenReturn(true);
+        when(curvePointRepository.existsById(nonExistentCurvePointId)).thenReturn(false);
+        when(curvePointRepository.save(existentCurvePoint)).thenReturn(existentCurvePoint);
+
+        // Arrange
+        assertDoesNotThrow(() -> curvePointService.updateCurvePoint(existentCurvePoint));
+        assertThrows(EntityNotFoundException.class, () -> curvePointService.updateCurvePoint(nonExistentCurvePoint));
+    }
+
+    @Test
     public void testDeleteCurvePointById() {
         // Arrange
         int curvePointId = 1;
@@ -84,5 +108,20 @@ public class CurvePointServiceTest {
 
         // Assert
         verify(curvePointRepository, Mockito.times(1)).deleteById(any());
+    }
+
+    @Test
+    public void testVerifyBidListExistence() {
+        // Arrange
+        int existentCurvePointId = 1;
+        int nonExistentCurvePointId = 2;
+
+        // Act
+        when(curvePointRepository.existsById(existentCurvePointId)).thenReturn(true);
+        when(curvePointRepository.existsById(nonExistentCurvePointId)).thenReturn(false);
+
+        // Assert
+        assertDoesNotThrow(() -> curvePointService.verifyCurvePointExistence(existentCurvePointId));
+        assertThrows(PoseidonEntityNotFoundException.class, () -> curvePointService.verifyCurvePointExistence(nonExistentCurvePointId));
     }
 }
