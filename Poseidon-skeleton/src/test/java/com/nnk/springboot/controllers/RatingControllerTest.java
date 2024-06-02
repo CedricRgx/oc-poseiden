@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.service.impl.RatingService;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,25 @@ public class RatingControllerTest {
     }
 
     @Test
+    public void testHomeWhenGetRatingsReturnsNull_thenVerifyLoggerError() {
+        // Arrange
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        when(ratingService.getRatings()).thenReturn(null);
+
+        // Act
+        String result = ratingController.home(model);
+
+        // Assert
+        assertEquals("rating/list", result);
+    }
+
+    @Test
     public void testAddRatingForm() {
         // Arrange
         Rating rating = new Rating();
@@ -76,6 +96,19 @@ public class RatingControllerTest {
 
         // Assert
         assertEquals("redirect:/rating/list", viewName);
+    }
+
+    @Test
+    public void testValidateWithErrors() {
+        // Arrange
+        Rating rating = new Rating();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = ratingController.validate(rating, bindingResult, model);
+
+        // Assert
+        assertEquals("rating/add", viewName);
     }
 
     @Test
@@ -104,6 +137,34 @@ public class RatingControllerTest {
 
         // Assert
         assertEquals("redirect:/rating/list", viewName);
+    }
+
+    @Test
+    public void testUpdateRatingWithInvalidId() {
+        // Arrange
+        Integer id = 999;
+        when(ratingService.getRatingById(id)).thenReturn(Optional.empty());
+
+        // Act
+        String viewName = ratingController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("rating/update", viewName);
+    }
+
+    @Test
+    public void testUpdateRatingWithValidationError() {
+        // Arrange
+        Integer id = 1;
+        Rating rating = new Rating();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = ratingController.updateRating(id, rating, bindingResult, model);
+
+        // Assert
+        assertEquals("rating/update", viewName);
+        verify(model).addAttribute("rating", rating);
     }
 
     @Test

@@ -18,6 +18,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for handling trade in the Poseidon application
+ */
 @Controller
 public class TradeController {
     

@@ -8,8 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TradeTest {
@@ -265,5 +264,225 @@ public class TradeTest {
     public void testSetSide() {
         trade.setSide(side);
         assertEquals(side, trade.getSide());
+    }
+
+    @Test
+    public void testBuilder() {
+        // Arrange
+        String expected = "Trade(" +
+                "id=null, " +
+                "account=AccountTest, " +
+                "type=TypeTest, " +
+                "buyQuantity=100.0, " +
+                "sellQuantity=200.0, " +
+                "buyPrice=150.0, " +
+                "sellPrice=175.0, " +
+                "tradeDate=2020-05-05 00:00:00.0, " +
+                "security=SecurityTest, " +
+                "status=StatusTest, " +
+                "trader=TraderTest, " +
+                "benchmark=BenchmarkTest, " +
+                "book=BookTest, " +
+                "creationName=CreationNameTest, " +
+                "creationDate=2022-05-05 00:00:00.0, " +
+                "revisionName=RevisionNameTest, " +
+                "revisionDate=2021-05-05 00:00:00.0, " +
+                "dealName=DealNameTest, " +
+                "dealType=DealTypeTest, " +
+                "sourceListId=SourceListIdTest, " +
+                "side=SideTest" +
+                ")";
+
+        // Act Assert
+        assertEquals(expected, trade.toString());
+    }
+
+    @Test
+    public void testHashCodeConsistency() {
+        // Arrange
+        Trade tradeTest = new Trade();
+
+        // Act
+        int initialHashCode = tradeTest.hashCode();
+
+        // Assert
+        assertEquals(initialHashCode, tradeTest.hashCode());
+        assertEquals(initialHashCode, tradeTest.hashCode());
+    }
+
+    @Test
+    public void testHashCodeEquality() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+
+        // Act Assert
+        assertEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeInequality() {
+        // Act
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        tradeTest2.setAccount("DifferentAccount");
+
+        // Act Assert
+        assertNotEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeForNullFields() {
+        // Act
+        Trade tradeTest = new Trade();
+        tradeTest.setAccount(null);
+
+        // Act
+        int hashCodeWithNull = tradeTest.hashCode();
+        tradeTest.setAccount("NonNullAccount");
+        int hashCodeWithoutNull = tradeTest.hashCode();
+
+        // Assert
+        assertNotEquals(hashCodeWithNull, hashCodeWithoutNull);
+    }
+
+    @Test
+    public void testHashCodeEqualityForEqualObjects() {
+        // Act
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+
+        // Assert
+        assertEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeInequalityForDifferentObjects() {
+        // Act
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        tradeTest2.setAccount("DifferentAccount");
+
+        // Assert
+        assertNotEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNullFields() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        tradeTest1.setAccount(null);
+        tradeTest2.setAccount(null);
+
+        // Assert
+        assertEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+
+        // Arrange
+        tradeTest1.setAccount("NonNullAccount");
+        // Assert
+        assertNotEquals(tradeTest1.hashCode(), tradeTest2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameObject() {
+        // Arrange
+        Trade tradeTest = new Trade();
+
+        // Assert
+        assertEquals(tradeTest, tradeTest);
+    }
+
+    @Test
+    public void testEqualsIdenticalObjects() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+
+        // Assert
+        assertEquals(tradeTest1, tradeTest2);
+    }
+
+    @Test
+    public void testEqualsDifferentObjects() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        tradeTest2.setAccount("DifferentAccount");
+
+        // Assert
+        assertNotEquals(tradeTest1, tradeTest2);
+    }
+
+    @Test
+    public void testEqualsNullObject() {
+        // Arrange
+        Trade tradeTest = new Trade();
+
+        // Assert
+        assertNotEquals(tradeTest, null);
+    }
+
+    @Test
+    public void testEqualsDifferentClassObject() {
+        // Arrange
+        Trade tradeTest = new Trade();
+        String differentClassObject = "String Test";
+
+        // Assert
+        assertNotEquals(tradeTest, differentClassObject);
+    }
+
+    @Test
+    public void testEqualsNullFields() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        tradeTest1.setAccount(null);
+        tradeTest2.setAccount(null);
+
+        // Assert
+        assertEquals(tradeTest1, tradeTest2);
+
+        // Arrange
+        tradeTest1.setAccount("NonNullAccount");
+        // Assert
+        assertNotEquals(tradeTest1, tradeTest2);
+    }
+
+    @Test
+    public void testEqualsSymmetric() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+
+        // Assert
+        assertEquals(tradeTest1, tradeTest2);
+        assertEquals(tradeTest2, tradeTest1);
+    }
+
+    @Test
+    public void testEqualsTransitive() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+        Trade tradeTest3 = new Trade();
+
+        // Assert
+        assertEquals(tradeTest1, tradeTest2);
+        assertEquals(tradeTest2, tradeTest3);
+        assertEquals(tradeTest1, tradeTest3);
+    }
+
+    @Test
+    public void testEqualsConsistent() {
+        // Arrange
+        Trade tradeTest1 = new Trade();
+        Trade tradeTest2 = new Trade();
+
+        // Assert
+        assertEquals(tradeTest1, tradeTest2);
+        assertEquals(tradeTest1, tradeTest2);
+        assertEquals(tradeTest1, tradeTest2);
     }
 }

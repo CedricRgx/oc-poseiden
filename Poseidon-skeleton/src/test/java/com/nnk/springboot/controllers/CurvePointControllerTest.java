@@ -54,6 +54,25 @@ public class CurvePointControllerTest {
     }
 
     @Test
+    public void testHomeWhenGetCurvePointsReturnsNull_thenVerifyLoggerError() {
+        // Arrange
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        when(curvePointService.getCurvePoints()).thenReturn(null);
+
+        // Act
+        String result = curvePointController.home(model);
+
+        // Assert
+        assertEquals("curvePoint/list", result);
+    }
+
+    @Test
     public void testAddCurvePointForm() {
         // Arrange
         CurvePoint curvePoint = new CurvePoint();
@@ -76,6 +95,19 @@ public class CurvePointControllerTest {
 
         // Assert
         assertEquals("redirect:/curvePoint/list", viewName);
+    }
+
+    @Test
+    public void testValidateWithErrors() {
+        // Arrange
+        CurvePoint curvePoint = new CurvePoint();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = curvePointController.validate(curvePoint, bindingResult, model);
+
+        // Assert
+        assertEquals("curvePoint/add", viewName);
     }
 
     @Test
@@ -104,6 +136,34 @@ public class CurvePointControllerTest {
 
         // Assert
         assertEquals("redirect:/curvePoint/list", viewName);
+    }
+
+    @Test
+    public void testUpdateCurvePointWithInvalidId() {
+        // Arrange
+        Integer id = 999;
+        when(curvePointService.getCurvePointById(id)).thenReturn(Optional.empty());
+
+        // Act
+        String viewName = curvePointController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("curvePoint/update", viewName);
+    }
+
+    @Test
+    public void testUpdateCurvePointWithValidationError() {
+        // Arrange
+        Integer id = 1;
+        CurvePoint curvePoint = new CurvePoint();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = curvePointController.updateCurve(id, curvePoint, bindingResult, model);
+
+        // Assert
+        assertEquals("curvePoint/update", viewName);
+        verify(model).addAttribute("curvePoint", curvePoint);
     }
 
     @Test

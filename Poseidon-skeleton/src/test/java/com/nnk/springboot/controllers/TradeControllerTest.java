@@ -54,6 +54,25 @@ public class TradeControllerTest {
     }
 
     @Test
+    public void testHomeWhenGetTradesReturnsNull_thenVerifyLoggerError() {
+        // Arrange
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        when(tradeService.getTrades()).thenReturn(null);
+
+        // Act
+        String result = tradeController.home(model);
+
+        // Assert
+        assertEquals("trade/list", result);
+    }
+
+    @Test
     public void testAddTradeForm() {
         // Arrange
         Trade trade = new Trade();
@@ -76,6 +95,19 @@ public class TradeControllerTest {
 
         // Assert
         assertEquals("redirect:/trade/list", viewName);
+    }
+
+    @Test
+    public void testValidateWithErrors() {
+        // Arrange
+        Trade trade = new Trade();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = tradeController.validate(trade, bindingResult, model);
+
+        // Assert
+        assertEquals("trade/add", viewName);
     }
 
     @Test
@@ -104,6 +136,34 @@ public class TradeControllerTest {
 
         // Assert
         assertEquals("redirect:/trade/list", viewName);
+    }
+
+    @Test
+    public void testUpdateTradeWithInvalidId() {
+        // Arrange
+        Integer id = 999;
+        when(tradeService.getTradeById(id)).thenReturn(Optional.empty());
+
+        // Act
+        String viewName = tradeController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("trade/update", viewName);
+    }
+
+    @Test
+    public void testUpdateTradeWithValidationError() {
+        // Arrange
+        Integer id = 1;
+        Trade trade = new Trade();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = tradeController.updateTrade(id, trade, bindingResult, model);
+
+        // Assert
+        assertEquals("trade/update", viewName);
+        verify(model).addAttribute("trade", trade);
     }
 
     @Test

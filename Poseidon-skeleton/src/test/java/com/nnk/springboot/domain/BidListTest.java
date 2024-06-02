@@ -8,8 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BidListTest {
@@ -277,6 +276,227 @@ public class BidListTest {
     public void testSetSide() {
         bidList.setSide(side);
         assertEquals(side, bidList.getSide());
+    }
+
+    @Test
+    public void testBuilder() {
+        // Arrange
+        String expected = "BidList(" +
+                "id=null, " +
+                "account=AccountTest, " +
+                "type=TypeTest, " +
+                "bidQuantity=100.0, " +
+                "askQuantity=200.0, " +
+                "bid=150.0, " +
+                "ask=175.0, " +
+                "benchmark=BenchmarkTest, " +
+                "bidListDate=2020-05-05 00:00:00.0, " +
+                "commentary=CommentaryTest, " +
+                "security=SecurityTest, " +
+                "status=StatusTest, " +
+                "trader=TraderTest, " +
+                "book=BookTest, " +
+                "creationName=CreationNameTest, " +
+                "creationDate=2022-05-05 00:00:00.0, " +
+                "revisionName=RevisionNameTest, " +
+                "revisionDate=2021-05-05 00:00:00.0, " +
+                "dealName=DealNameTest, " +
+                "dealType=DealTypeTest, " +
+                "sourceListId=SourceListIdTest, " +
+                "side=SideTest" +
+                ")";
+
+        // Act Assert
+        assertEquals(expected, bidList.toString());
+    }
+
+    @Test
+    public void testHashCodeConsistency() {
+        // Arrange
+        BidList bidListTest = new BidList();
+
+        // Act
+        int initialHashCode = bidListTest.hashCode();
+
+        // Assert
+        assertEquals(initialHashCode, bidListTest.hashCode());
+        assertEquals(initialHashCode, bidListTest.hashCode());
+    }
+
+    @Test
+    public void testHashCodeEquality() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+
+        // Act Assert
+        assertEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeInequality() {
+        // Act
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        bidListTest2.setAccount("DifferentAccount");
+
+        // Act Assert
+        assertNotEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeForNullFields() {
+        // Act
+        BidList bidListTest = new BidList();
+        bidListTest.setAccount(null);
+
+        // Act
+        int hashCodeWithNull = bidListTest.hashCode();
+        bidListTest.setAccount("NonNullAccount");
+        int hashCodeWithoutNull = bidListTest.hashCode();
+
+        // Assert
+        assertNotEquals(hashCodeWithNull, hashCodeWithoutNull);
+    }
+
+    @Test
+    public void testHashCodeEqualityForEqualObjects() {
+        // Act
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+
+        // Assert
+        assertEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeInequalityForDifferentObjects() {
+        // Act
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        bidListTest2.setAccount("DifferentAccount");
+
+        // Assert
+        assertNotEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNullFields() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        bidListTest1.setAccount(null);
+        bidListTest2.setAccount(null);
+
+        // Assert
+        assertEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+
+        // Arrange
+        bidListTest1.setAccount("NonNullAccount");
+        // Assert
+        assertNotEquals(bidListTest1.hashCode(), bidListTest2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameObject() {
+        // Arrange
+        BidList bidListTest = new BidList();
+
+        // Assert
+        assertEquals(bidListTest, bidListTest);
+    }
+
+    @Test
+    public void testEqualsIdenticalObjects() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+
+        // Assert
+        assertEquals(bidListTest1, bidListTest2);
+    }
+
+    @Test
+    public void testEqualsDifferentObjects() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        bidListTest2.setAccount("DifferentAccount");
+
+        // Assert
+        assertNotEquals(bidListTest1, bidListTest2);
+    }
+
+    @Test
+    public void testEqualsNullObject() {
+        // Arrange
+        BidList bidListTest = new BidList();
+
+        // Assert
+        assertNotEquals(bidListTest, null);
+    }
+
+    @Test
+    public void testEqualsDifferentClassObject() {
+        // Arrange
+        BidList bidListTest = new BidList();
+        String differentClassObject = "String Test";
+
+        // Assert
+        assertNotEquals(bidListTest, differentClassObject);
+    }
+
+    @Test
+    public void testEqualsNullFields() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        bidListTest1.setAccount(null);
+        bidListTest2.setAccount(null);
+
+        // Assert
+        assertEquals(bidListTest1, bidListTest2);
+
+        // Arrange
+        bidListTest1.setAccount("NonNullAccount");
+        // Assert
+        assertNotEquals(bidListTest1, bidListTest2);
+    }
+
+    @Test
+    public void testEqualsSymmetric() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+
+        // Assert
+        assertEquals(bidListTest1, bidListTest2);
+        assertEquals(bidListTest2, bidListTest1);
+    }
+
+    @Test
+    public void testEqualsTransitive() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+        BidList bidListTest3 = new BidList();
+
+        // Assert
+        assertEquals(bidListTest1, bidListTest2);
+        assertEquals(bidListTest2, bidListTest3);
+        assertEquals(bidListTest1, bidListTest3);
+    }
+
+    @Test
+    public void testEqualsConsistent() {
+        // Arrange
+        BidList bidListTest1 = new BidList();
+        BidList bidListTest2 = new BidList();
+
+        // Assert
+        assertEquals(bidListTest1, bidListTest2);
+        assertEquals(bidListTest1, bidListTest2);
+        assertEquals(bidListTest1, bidListTest2);
     }
 
 }

@@ -16,6 +16,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for handling curvePoint in the Poseidon application
+ */
 @Controller
 public class CurvePointController {
     

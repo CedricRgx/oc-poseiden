@@ -54,6 +54,25 @@ public class RuleNameControllerTest {
     }
 
     @Test
+    public void testHomeWhenGetRuleNamesReturnsNull_thenVerifyLoggerError() {
+        // Arrange
+        UserDetails userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(userDetails,null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        when(ruleNameService.getRuleNames()).thenReturn(null);
+
+        // Act
+        String result = ruleNameController.home(model);
+
+        // Assert
+        assertEquals("ruleName/list", result);
+    }
+
+    @Test
     public void testAddRuleNameForm() {
         // Arrange
         RuleName ruleName = new RuleName();
@@ -76,6 +95,19 @@ public class RuleNameControllerTest {
 
         // Assert
         assertEquals("redirect:/ruleName/list", viewName);
+    }
+
+    @Test
+    public void testValidateWithErrors() {
+        // Arrange
+        RuleName ruleName = new RuleName();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = ruleNameController.validate(ruleName, bindingResult, model);
+
+        // Assert
+        assertEquals("ruleName/add", viewName);
     }
 
     @Test
@@ -106,6 +138,34 @@ public class RuleNameControllerTest {
         assertEquals("redirect:/ruleName/list", viewName);
     }
 
+    @Test
+    public void testUpdateRuleNameWithInvalidId() {
+        // Arrange
+        Integer id = 999;
+        when(ruleNameService.getRuleNameById(id)).thenReturn(Optional.empty());
+
+        // Act
+        String viewName = ruleNameController.showUpdateForm(id, model);
+
+        // Assert
+        assertEquals("ruleName/update", viewName);
+    }
+
+    @Test
+    public void testUpdateRuleNameWithValidationError() {
+        // Arrange
+        Integer id = 1;
+        RuleName ruleName = new RuleName();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        // Act
+        String viewName = ruleNameController.updateRuleName(id, ruleName, bindingResult, model);
+
+        // Assert
+        assertEquals("ruleName/update", viewName);
+        verify(model).addAttribute("ruleName", ruleName);
+    }
+    
     @Test
     public void testDeleteRuleName() {
         // Arrange
