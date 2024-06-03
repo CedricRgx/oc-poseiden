@@ -301,4 +301,76 @@ public class RuleNameTest {
         assertEquals(ruleNameTest1, ruleNameTest2);
     }
 
+    @Test
+    public void testConstructorWithNullValues() {
+        // Arrange
+        ruleName = new RuleName(null, null, null, null, null, null);
+
+        // Assert
+        assertNull(ruleName.getName());
+        assertNull(ruleName.getDescription());
+        assertNull(ruleName.getJson());
+        assertNull(ruleName.getTemplate());
+        assertNull(ruleName.getSqlStr());
+        assertNull(ruleName.getSqlPart());
+    }
+
+    @Test
+    public void testValidationConstraints() {
+        // Arrange Assert
+        ruleName.setName("a".repeat(126));
+        assertFalse(ruleName.getName().length() <= 125);
+
+        // Arrange Assert
+        ruleName.setDescription("a".repeat(126));
+        assertFalse(ruleName.getDescription().length() <= 125);
+
+        // Arrange Assert
+        ruleName.setJson("a".repeat(126));
+        assertFalse(ruleName.getJson().length() <= 125);
+
+        // Arrange Assert
+        ruleName.setTemplate("a".repeat(126));
+        assertFalse(ruleName.getTemplate().length() <= 125);
+
+        // Arrange Assert
+        ruleName.setSqlStr("a".repeat(126));
+        assertFalse(ruleName.getSqlStr().length() <= 125);
+
+        // Arrange Assert
+        ruleName.setSqlPart("a".repeat(126));
+        assertFalse(ruleName.getSqlPart().length() <= 125);
+    }
+
+    @Test
+    public void testToStringWithNullValues() {
+        // Arrange
+        ruleName = new RuleName(null, null, null, null, null, null);
+        String expected = "RuleName(id=null, name=null, description=null, json=null, template=null, sqlStr=null, sqlPart=null)";
+
+        // Assert
+        assertEquals(expected, ruleName.toString());
+    }
+
+    @Test
+    public void testEqualsAndHashCodeWithNullValues() {
+        // Arrange
+        ruleName = new RuleName(null, null, null, null, null, null);
+        RuleName ruleName2 = new RuleName(null, null, null, null, null, null);
+
+        // Assert
+        assertEquals(ruleName, ruleName2);
+        assertEquals(ruleName.hashCode(), ruleName2.hashCode());
+    }
+
+    @Test
+    public void testEqualsAndHashCodeWithDifferentValues() {
+        // Arrange
+        RuleName ruleName2 = new RuleName("differentName", description, json, template, sqlStr, sqlPart);
+
+        // Assert
+        assertNotEquals(ruleName, ruleName2);
+        assertNotEquals(ruleName.hashCode(), ruleName2.hashCode());
+    }
+
 }

@@ -19,6 +19,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import java.io.IOException;
 import java.util.*;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,20 +80,38 @@ public class CustomAuthenticationSuccessHandlerTest {
     }
 
     @Test
-    public void testMultipleAuthorities() throws IOException {
+    public void testOnAuthenticationSuccessWithMultipleAuthorities() throws IOException {
         // Arrange
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("username", "password", authorities);
+        List<GrantedAuthority> authorities = Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        );
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken("user", "pass", authorities);
 
         // Act
-        customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authenticationToken);
+        customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+
+        // Assert
+        verify(defaultRedirectStrategy).sendRedirect(request, response, "/bidList/list");
     }
 
+    @Test
+    public void testOnAuthenticationSuccessNoMatchingAuthority() throws IOException {
+        // Arrange
+        HttpServletRequest request = new MockHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_UNKNOWN"));
 
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken("user", "pass", authorities);
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () ->
+                customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication));
+    }
 
 }

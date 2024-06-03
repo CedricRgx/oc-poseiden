@@ -131,10 +131,18 @@ public class CurvePointTest {
         // Act
         CurvePoint curvePointTest = new CurvePoint();
         curvePointTest.setTerm(null);
+        curvePointTest.setCurveId(null);
+        curvePointTest.setValue(null);
+        curvePointTest.setCreationDate(null);
+        curvePointTest.setAsOfDate(null);
 
         // Act
         int hashCodeWithNull = curvePointTest.hashCode();
         curvePointTest.setTerm(42.42);
+        curvePointTest.setCurveId(42);
+        curvePointTest.setValue(42.42);
+        curvePointTest.setCreationDate(Timestamp.valueOf(LocalDate.of(2020, 05, 05).atStartOfDay()));
+        curvePointTest.setAsOfDate(Timestamp.valueOf(LocalDate.of(2020, 05, 05).atStartOfDay()));
         int hashCodeWithoutNull = curvePointTest.hashCode();
 
         // Assert
@@ -241,6 +249,10 @@ public class CurvePointTest {
 
         // Arrange
         curvePointTest1.setTerm(42.42);
+        curvePointTest1.setCurveId(42);
+        curvePointTest1.setValue(42.42);
+        curvePointTest1.setCreationDate(Timestamp.valueOf(LocalDate.of(2020, 05, 05).atStartOfDay()));
+        curvePointTest1.setAsOfDate(Timestamp.valueOf(LocalDate.of(2020, 05, 05).atStartOfDay()));
         // Assert
         assertNotEquals(curvePointTest1, curvePointTest2);
     }

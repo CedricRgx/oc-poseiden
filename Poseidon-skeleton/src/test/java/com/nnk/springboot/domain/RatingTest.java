@@ -129,6 +129,9 @@ public class RatingTest {
         // Act
         int hashCodeWithNull = ratingTest.hashCode();
         ratingTest.setMoodysRating("NonNullMoodysRating");
+        ratingTest.setFitchRating("NonNullFitchRating");
+        ratingTest.setSandPRating("NonNullSandPRating");
+        ratingTest.setOrderNumber(42);
         int hashCodeWithoutNull = ratingTest.hashCode();
 
         // Assert
@@ -162,15 +165,44 @@ public class RatingTest {
         Rating ratingTest1 = new Rating();
         Rating ratingTest2 = new Rating();
         ratingTest1.setMoodysRating(null);
+        ratingTest1.setFitchRating(null);
+        ratingTest1.setSandPRating(null);
+        ratingTest1.setOrderNumber(null);
         ratingTest2.setMoodysRating(null);
+        ratingTest2.setFitchRating(null);
+        ratingTest2.setSandPRating(null);
+        ratingTest2.setOrderNumber(null);
 
         // Assert
         assertEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
 
-        // Arrange
+        // Arrange Assert
         ratingTest1.setMoodysRating("NonNullMoodysRating");
-        // Assert
         assertNotEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest1.setFitchRating("NonNullFitchRating");
+        ratingTest2.setFitchRating("NonNullFitchRating");
+        assertNotEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest1.setSandPRating("NonNullSandPRating");
+        ratingTest2.setSandPRating("NonNullSandPRating");
+        assertNotEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest1.setOrderNumber(42);
+        ratingTest2.setOrderNumber(42);
+        assertNotEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest2.setMoodysRating("NonNullMoodysRating");
+        assertEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest2.setFitchRating("NonNullFitchRating");
+        assertEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest2.setSandPRating("NonNullSandPRating");
+        assertEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
+
+        ratingTest2.setOrderNumber(42);
+        assertEquals(ratingTest1.hashCode(), ratingTest2.hashCode());
     }
 
     @Test
@@ -198,6 +230,9 @@ public class RatingTest {
         Rating ratingTest1 = new Rating();
         Rating ratingTest2 = new Rating();
         ratingTest2.setMoodysRating("DifferentMoodysRating");
+        ratingTest2.setFitchRating("DifferentFitchRating");
+        ratingTest2.setSandPRating("DifferentSandPRating");
+        ratingTest2.setOrderNumber(42);
 
         // Assert
         assertNotEquals(ratingTest1, ratingTest2);
@@ -235,6 +270,9 @@ public class RatingTest {
 
         // Arrange
         ratingTest1.setMoodysRating("NonNullMoodysRating");
+        ratingTest1.setFitchRating("NonNullFitchRating");
+        ratingTest1.setSandPRating("NonNullSandPRating");
+        ratingTest1.setOrderNumber(42);
         // Assert
         assertNotEquals(ratingTest1, ratingTest2);
     }
