@@ -20,3 +20,5 @@
 *.swp
 /logs/*
 /.idea/*
+/Poseidon-skeleton/target/*
+/Poseidon-skeleton/logs/
