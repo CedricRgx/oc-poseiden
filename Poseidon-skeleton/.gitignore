@@ -18,4 +18,4 @@
 *.tmp
 *.out
 *.swp
-/logs/app.log
+/logs/*
