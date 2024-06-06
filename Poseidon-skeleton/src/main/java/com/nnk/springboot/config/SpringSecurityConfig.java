@@ -1,5 +1,8 @@
 package com.nnk.springboot.config;
 
+import com.nnk.springboot.controllers.BidListController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -55,6 +60,8 @@ public class SpringSecurityConfig {
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error403");
+
+        logger.info("==========================================SecurityFilterChain");
         return http.build();
     }
 
