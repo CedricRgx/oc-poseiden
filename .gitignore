@@ -11,7 +11,7 @@
 *.class
 
 # Ignorer le répertoire target/ qui contient les fichiers compilés pour Maven
-/target/
+/target/*
 
 # Ignorer d'autres fichiers générés par des outils de construction
 *.log
