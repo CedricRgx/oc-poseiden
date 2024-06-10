@@ -5,8 +5,10 @@ import com.nnk.springboot.service.impl.CurvePointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,13 +43,20 @@ public class CurvePointController {
     public String home(Model model){
         logger.info("Loading Curve Point list page");
         List<CurvePoint> curvePoints = curvePointService.getCurvePoints();
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
         if(curvePoints == null) {
             logger.error("Error retrieving curvePoints for list page");
         } else {
             logger.info("Successfully retrieved curvePoints for list page");
             model.addAttribute("curvePoints", curvePoints);
-            model.addAttribute("user", userDetails);
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                model.addAttribute("user", userDetails);
+            } else if (principal instanceof DefaultOAuth2User) {
+                DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+                model.addAttribute("user", oauth2User.getAttributes());
+            }
         }
         return "curvePoint/list";
     }

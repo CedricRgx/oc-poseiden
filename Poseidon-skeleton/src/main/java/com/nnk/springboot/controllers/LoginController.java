@@ -33,13 +33,10 @@ public class LoginController {
         return "login";
     }
 
-/*    @GetMapping("secure/article-details")
-    public ModelAndView getAllUserArticles() {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
-        mav.setViewName("user/list");
-        return mav;
-    }*/
+    @GetMapping("/default")
+    public String defaultAfterLogin() {
+        return "bidList/list";
+    }
 
     /**
      * Displays the error page

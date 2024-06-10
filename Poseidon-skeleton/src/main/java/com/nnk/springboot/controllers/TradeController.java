@@ -7,8 +7,10 @@ import com.nnk.springboot.service.impl.TradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,13 +45,20 @@ public class TradeController {
     public String home(Model model){
         logger.info("Loading trade list page");
         List<Trade> trades = tradeService.getTrades();
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
         if(trades == null) {
             logger.error("Error retrieving trades for list page");
         } else {
             logger.info("Successfully retrieved trades for list page");
             model.addAttribute("trades", trades);
-            model.addAttribute("user", userDetails);
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                model.addAttribute("user", userDetails);
+            } else if (principal instanceof DefaultOAuth2User) {
+                DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+                model.addAttribute("user", oauth2User.getAttributes());
+            }
         }
         return "trade/list";
     }

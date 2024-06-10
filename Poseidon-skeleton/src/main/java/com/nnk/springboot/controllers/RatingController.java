@@ -5,8 +5,10 @@ import com.nnk.springboot.service.impl.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,13 +43,20 @@ public class RatingController {
     public String home(Model model){
         logger.info("Loading rating list page");
         List<Rating> ratings = ratingService.getRatings();
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
         if(ratings == null) {
             logger.error("Error retrieving ratings for list page");
         } else {
             logger.info("Successfully retrieved ratings for list page");
             model.addAttribute("ratings", ratings);
-            model.addAttribute("user", userDetails);
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                model.addAttribute("user", userDetails);
+            } else if (principal instanceof DefaultOAuth2User) {
+                DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+                model.addAttribute("user", oauth2User.getAttributes());
+            }
         }
         return "rating/list";
     }

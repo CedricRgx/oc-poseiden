@@ -6,8 +6,10 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +39,7 @@ public class BidListController {
      * @param model The model for the view to add attributes to be rendered on the page.
      * @return The name of the template to render the list of bidLists.
      */
-    @GetMapping("/bidList/list")
+/*    @GetMapping("/bidList/list")
     public String home(Model model){
         logger.info("Loading Bid List list page");
         List<BidList> bidLists = bidListService.getBidLists();
@@ -49,6 +51,30 @@ public class BidListController {
             model.addAttribute("bidLists", bidLists);
             model.addAttribute("user", userDetails);
         }
+        return "bidList/list";
+    }*/
+    @GetMapping("/bidList/list")
+    public String home(Model model) {
+        logger.info("Loading Bid List list page");
+        List<BidList> bidLists = bidListService.getBidLists();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (bidLists == null) {
+            logger.error("Error retrieving bidLists for list page");
+        } else {
+            logger.info("Successfully retrieved bidLists for list page");
+            model.addAttribute("bidLists", bidLists);
+
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                model.addAttribute("user", userDetails);
+            } else if (principal instanceof DefaultOAuth2User) {
+                DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+                model.addAttribute("user", oauth2User.getAttributes());
+            }
+        }
+
         return "bidList/list";
     }
 

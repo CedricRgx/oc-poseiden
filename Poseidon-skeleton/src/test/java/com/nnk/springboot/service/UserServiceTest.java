@@ -151,23 +151,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testFindByUsername() {
-        // Arrange
-        String existentUsername = "ExistUser";
-        String nonExistentUsername = "NonExistUser";
-        User user = new User();
-        user.setUsername(existentUsername);
-
-        // Act
-        when(userRepository.findByUsername(existentUsername)).thenReturn(Optional.of(user));
-        when(userRepository.findByUsername(nonExistentUsername)).thenReturn(Optional.empty());
-
-        // Assert
-        assertDoesNotThrow(() -> userService.findByUsername(existentUsername));
-        assertThrows(EntityNotFoundException.class, () -> userService.findByUsername(nonExistentUsername));
-    }
-
-    @Test
     public void testIsUsernameUnique() {
         // Arrange
         String uniqueUsername = "UniqueUser";

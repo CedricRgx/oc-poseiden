@@ -1,9 +1,7 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.controllers.BidListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,9 +22,12 @@ public class SpringSecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SpringSecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public SpringSecurityConfig(CustomUserDetailsService customUserDetailsService, CustomOAuth2UserService customOAuth2UserService) {
         this.customUserDetailsService = customUserDetailsService;
+        this.customOAuth2UserService = customOAuth2UserService;
+        logger.info("SpringSecurityConfig instantiated with CustomOAuth2UserService");
     }
 
     /**
@@ -40,13 +41,21 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/css/**", "/oauth2/**").permitAll()
                 .requestMatchers("/user/**", "/").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .successHandler(customAuthenticationSuccessHandler())
+                .permitAll()
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .successHandler(customAuthenticationSuccessHandler())
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
                 .permitAll()
                 .and()
                 .rememberMe()
@@ -61,7 +70,6 @@ public class SpringSecurityConfig {
                 .exceptionHandling()
                 .accessDeniedPage("/error403");
 
-        logger.info("==========================================SecurityFilterChain");
         return http.build();
     }
 

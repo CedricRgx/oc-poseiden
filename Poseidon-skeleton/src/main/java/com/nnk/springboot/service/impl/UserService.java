@@ -111,9 +111,6 @@ public class UserService implements IUserService {
     public Optional<User> findByUsername(String username){
         logger.info("Retrieving an user by its username");
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isEmpty()){
-            throw new EntityNotFoundException("User not found");
-        }
         return user;
     }
 
