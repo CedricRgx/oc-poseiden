@@ -51,16 +51,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("Missing attribute 'login' in attributes");
         }
 
-        User user = userService.findByUsername(username).orElse(null);
-        if(user!=null){
-            logger.info("User {} already exists", username);
-        }else{
-            String fullname = username;
-            String password = "password";
-            user = new User(username, password, fullname, "USER");
-            userService.addUser(user);
-            logger.info("New user registered with OAuth2 GitHub");
-        }
+        String fullname = username;
+        String password = null;
+        User user = new User(username, password, fullname, "USER");
         Map<String, Object> listOfAttributes = new HashMap<>(oAuth2User.getAttributes());
         listOfAttributes.put("username", user.getUsername());
         listOfAttributes.put("fullname", user.getFullname());
