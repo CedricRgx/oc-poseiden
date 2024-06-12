@@ -1,9 +1,7 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -113,6 +111,7 @@ public class BidList {
      * The bidQuantity of the bidlist.
      */
     @NotNull(message="{bidQuantity.notnull}")
+    @Positive(message = "{bidQuantity.positive}")
     @Column(name= "bidQuantity")
     private Double bidQuantity;
 

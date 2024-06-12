@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import java.sql.Timestamp;
 
@@ -61,6 +62,7 @@ public class CurvePoint {
      * The identifier of the curve of the curvepoint.
      */
     @NotNull(message="{curveId.notnull}")
+    @Positive(message = "{curveId.positive}")
     @Column(name="CurveId")
     private Integer curveId;
 
@@ -73,12 +75,14 @@ public class CurvePoint {
     /**
      * The term of the curvepoint.
      */
+    @Positive(message = "{term.positive}")
     @Column(name="term")
     private Double term;
 
     /**
      * The value of the curvepoint.
      */
+    @Positive(message = "{value.positive}")
     @Column(name="value")
     private Double value;
 

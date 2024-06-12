@@ -1,6 +1,7 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -65,6 +66,7 @@ public class Rating {
     /**
      * The orderNumber of the rating.
      */
+    @Positive(message = "{order.positive}")
     @Column(name="orderNumber")
     private Integer orderNumber;
 

@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.sql.Timestamp;
@@ -107,6 +108,7 @@ public class Trade {
     /**
      * The quantity to buy of the trade.
      */
+    @Positive(message="{buyQuantity.positive}")
     @Column(name="buyQuantity")
     private Double buyQuantity;
 
