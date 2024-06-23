@@ -89,6 +89,7 @@ public class UserService implements IUserService {
     public User updateUser(User user){
         logger.info("Updating an user");
         verifyUserExistence(user.getId());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
